@@ -1,0 +1,880 @@
+<title>8장 · 모던 JavaScript 생태계 — 자바 개발자를 위한 JavaScript 입문</title>
+<style>
+  :root {
+    --paper: #EEF0EA;
+    --paper-raised: #FAFAF6;
+    --paper-card: #F5F6F1;
+    --ink: #201F1B;
+    --ink-soft: #5C5A4E;
+    --ink-faint: #8B8878;
+    --accent: #D4A017;
+    --accent-soft: #FDF6E3;
+    --accent-ink: #8B6914;
+    --highlight: #2E7D32;
+    --highlight-soft: #E8F5E9;
+    --line: #DEDCD0;
+    --line-strong: #C7C4B4;
+    --mono-bg: #1C2229;
+    --mono-fg: #DCE3E8;
+    --mono-dim: #7C8894;
+    --shadow: 0 1px 2px rgba(32,31,27,0.05), 0 10px 28px rgba(32,31,27,0.06);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Apple Myungjo", AppleMyungjo, Batang, "Noto Serif KR", Georgia, serif;
+    font-size: 17.5px;
+    line-height: 1.92;
+  }
+  .measure { max-width: 700px; margin: 0 auto; padding: 0 28px; }
+  h1, h2, h3 { font-weight: 700; color: var(--ink); }
+  h2 { font-size: 1.5em; margin: 2.5em 0 0.8em; padding-bottom: 0.3em; border-bottom: 1px solid var(--line); }
+  h3 { font-size: 1.2em; margin: 2em 0 0.6em; }
+  p { margin: 0 0 1.15em; }
+  a { color: var(--accent-ink); }
+  ul, ol { margin: 0 0 1.15em; padding-left: 1.5em; }
+  li { margin-bottom: 0.4em; }
+
+  .mono, code, pre { font-family: ui-monospace, "SF Mono", "JetBrains Mono", Consolas, monospace; }
+  code:not(pre code) {
+    background: var(--accent-soft);
+    color: var(--accent-ink);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 0.86em;
+  }
+  pre {
+    background: var(--mono-bg);
+    color: var(--mono-fg);
+    padding: 20px 24px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 1.5em 0;
+  }
+  pre .comment { color: var(--mono-dim); }
+  pre .keyword { color: #C792EA; }
+  pre .string { color: #C3E88D; }
+  pre .number { color: #F78C6C; }
+
+  .masthead {
+    border-bottom: 1px solid var(--line);
+    padding: 22px 0;
+    font-family: -apple-system, "Apple SD Gothic Neo", sans-serif;
+  }
+  .masthead .row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+  .masthead .series { font-size: 12.5px; letter-spacing: 0.12em; color: var(--accent); font-weight: 600; }
+  .masthead nav a { font-size: 13px; color: var(--ink-soft); text-decoration: none; margin-left: 18px; }
+
+  .chapter-header {
+    padding: 72px 0 56px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 48px;
+  }
+  .chapter-header .num {
+    font-family: -apple-system, sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .chapter-header h1 { font-size: 2.2em; margin: 0 0 18px; }
+  .chapter-header .lead { font-size: 1.1em; color: var(--ink-soft); line-height: 1.75; }
+
+  .keypoint {
+    background: var(--accent-soft);
+    border-left: 4px solid var(--accent);
+    padding: 20px 24px;
+    margin: 1.5em 0;
+    border-radius: 0 8px 8px 0;
+  }
+  .keypoint strong {
+    display: block;
+    color: var(--accent-ink);
+    margin-bottom: 8px;
+    font-family: -apple-system, sans-serif;
+    font-size: 14px;
+  }
+
+  .warning {
+    background: #FFF3E0;
+    border-left: 4px solid #FF9800;
+    padding: 20px 24px;
+    margin: 1.5em 0;
+    border-radius: 0 8px 8px 0;
+  }
+  .warning strong {
+    display: block;
+    color: #E65100;
+    margin-bottom: 8px;
+    font-family: -apple-system, sans-serif;
+    font-size: 14px;
+  }
+
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 1.5em 0;
+  }
+  .compare h4 {
+    font-family: -apple-system, sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    margin: 0 0 8px;
+    padding: 8px 16px;
+    border-radius: 6px 6px 0 0;
+  }
+  .compare .java h4 { background: #E8EAF6; color: #3F51B5; }
+  .compare .js h4 { background: var(--accent-soft); color: var(--accent-ink); }
+  .compare pre { margin: 0; border-radius: 0 0 6px 6px; }
+  @media (max-width: 700px) { .compare { grid-template-columns: 1fr; } }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5em 0;
+    font-size: 15px;
+  }
+  th, td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--line);
+  }
+  th {
+    background: var(--paper-card);
+    font-family: -apple-system, sans-serif;
+    font-weight: 600;
+  }
+
+  .chapter-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 32px 0;
+    margin-top: 48px;
+    border-top: 1px solid var(--line);
+    font-family: -apple-system, sans-serif;
+    font-size: 14px;
+  }
+  .chapter-nav a { color: var(--accent-ink); text-decoration: none; }
+</style>
+
+<header class="masthead">
+  <div class="measure">
+    <div class="row">
+      <span class="series">자바 개발자를 위한 JAVASCRIPT 입문</span>
+      <nav>
+        <a href="index.html">목차</a>
+        <a href="chapter7.html">← 이전</a>
+        <a href="chapter9.html">다음 →</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main class="measure">
+  <div class="chapter-header">
+    <div class="num">CHAPTER 8</div>
+    <h1>모던 JavaScript 생태계</h1>
+    <p class="lead">실무 JavaScript 개발에는 다양한 도구가 필요합니다.
+    패키지 관리자, 번들러, TypeScript를 소개하고 프레임워크 로드맵을 안내합니다.</p>
+  </div>
+
+  <h2>npm - 패키지 관리자</h2>
+
+  <p>npm(Node Package Manager)은 JavaScript의 패키지 관리자입니다.
+  Java의 Maven/Gradle과 비슷한 역할을 합니다.</p>
+
+  <div class="compare">
+    <div class="java">
+      <h4>JAVA (Maven)</h4>
+      <pre>&lt;!-- pom.xml --&gt;
+&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;com.google.guava&lt;/groupId&gt;
+        &lt;artifactId&gt;guava&lt;/artifactId&gt;
+        &lt;version&gt;31.1-jre&lt;/version&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;
+
+mvn install</pre>
+    </div>
+    <div class="js">
+      <h4>JAVASCRIPT (npm)</h4>
+      <pre>// package.json
+{
+    "dependencies": {
+        "lodash": "^4.17.21"
+    }
+}
+
+npm install
+// 또는
+npm install lodash</pre>
+    </div>
+  </div>
+
+  <h3>프로젝트 시작</h3>
+
+  <pre># 프로젝트 초기화
+npm init
+npm init -y  # 기본값으로 빠르게 생성
+
+# package.json 생성됨
+{
+    "name": "my-project",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC"
+}</pre>
+
+  <h3>패키지 설치</h3>
+
+  <pre># 프로덕션 의존성 (dependencies)
+npm install lodash
+npm i axios          # i는 install의 축약
+
+# 개발 의존성 (devDependencies)
+npm install --save-dev jest
+npm i -D typescript
+
+# 전역 설치
+npm install -g typescript
+
+# 특정 버전 설치
+npm install lodash@4.17.21
+
+# package.json의 모든 의존성 설치
+npm install
+npm ci  # CI 환경에서 권장 (lock 파일 기준)</pre>
+
+  <h3>package.json</h3>
+
+  <pre>{
+    "name": "my-app",
+    "version": "1.0.0",
+    "scripts": {
+        "start": "node src/index.js",
+        "dev": "nodemon src/index.js",
+        "build": "webpack --mode production",
+        "test": "jest",
+        "lint": "eslint src/"
+    },
+    "dependencies": {
+        "express": "^4.18.2",
+        "lodash": "^4.17.21"
+    },
+    "devDependencies": {
+        "jest": "^29.5.0",
+        "nodemon": "^2.0.22",
+        "typescript": "^5.0.4"
+    }
+}
+
+# 스크립트 실행
+npm run start
+npm start        # start, test, stop은 run 생략 가능
+npm run build
+npm test</pre>
+
+  <h3>버전 표기법</h3>
+
+  <table>
+    <tr>
+      <th>표기</th>
+      <th>의미</th>
+      <th>예시</th>
+    </tr>
+    <tr>
+      <td>^4.17.21</td>
+      <td>메이저 버전 고정</td>
+      <td>4.17.21 ~ 4.x.x</td>
+    </tr>
+    <tr>
+      <td>~4.17.21</td>
+      <td>마이너 버전 고정</td>
+      <td>4.17.21 ~ 4.17.x</td>
+    </tr>
+    <tr>
+      <td>4.17.21</td>
+      <td>정확한 버전</td>
+      <td>4.17.21만</td>
+    </tr>
+    <tr>
+      <td>*</td>
+      <td>최신 버전</td>
+      <td>모든 버전</td>
+    </tr>
+  </table>
+
+  <h3>npm 대안: yarn, pnpm</h3>
+
+  <pre># yarn (Facebook)
+yarn add lodash
+yarn add -D typescript
+yarn install
+
+# pnpm (빠르고 디스크 효율적)
+pnpm add lodash
+pnpm add -D typescript
+pnpm install</pre>
+
+  <h2>번들러</h2>
+
+  <p>번들러는 여러 JavaScript 파일과 의존성을 하나(또는 최적화된 여러 개)의 파일로 묶어줍니다.
+  브라우저에서 효율적으로 로드할 수 있게 해줍니다.</p>
+
+  <div class="keypoint">
+    <strong>번들러가 필요한 이유</strong>
+    <p>1. 여러 파일을 하나로 합쳐 HTTP 요청 감소<br>
+    2. 사용하지 않는 코드 제거 (tree-shaking)<br>
+    3. 코드 압축 (minification)<br>
+    4. 모듈 시스템 지원 (브라우저 호환성)</p>
+  </div>
+
+  <h3>Webpack</h3>
+
+  <p>가장 널리 사용되는 번들러입니다. 설정이 복잡하지만 강력합니다.</p>
+
+  <pre># 설치
+npm install -D webpack webpack-cli
+
+# webpack.config.js
+const path = require('path');
+
+module.exports = {
+    entry: './src/index.js',
+    output: {
+        filename: 'bundle.js',
+        path: path.resolve(__dirname, 'dist')
+    },
+    mode: 'production',  // 또는 'development'
+    module: {
+        rules: [
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: 'babel-loader'
+            },
+            {
+                test: /\.css$/,
+                use: ['style-loader', 'css-loader']
+            }
+        ]
+    }
+};
+
+# 빌드
+npx webpack
+npm run build  # package.json scripts에 등록한 경우</pre>
+
+  <h3>Vite</h3>
+
+  <p>최신 번들러로, 개발 서버가 매우 빠릅니다.
+  새 프로젝트에서 권장됩니다.</p>
+
+  <pre># 프로젝트 생성
+npm create vite@latest my-app
+cd my-app
+npm install
+
+# 개발 서버 시작
+npm run dev
+
+# 프로덕션 빌드
+npm run build
+
+# vite.config.js
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+    server: {
+        port: 3000
+    },
+    build: {
+        outDir: 'dist'
+    }
+});</pre>
+
+  <div class="compare">
+    <div class="java">
+      <h4>WEBPACK</h4>
+      <pre>장점:
+- 풍부한 생태계
+- 레거시 브라우저 지원
+- 세밀한 제어 가능
+
+단점:
+- 설정이 복잡
+- 개발 서버가 느림
+- 번들 크기가 커질 수 있음</pre>
+    </div>
+    <div class="js">
+      <h4>VITE</h4>
+      <pre>장점:
+- 설정이 간단
+- 개발 서버가 매우 빠름
+- ES 모듈 네이티브 활용
+
+단점:
+- 상대적으로 새로움
+- 레거시 브라우저 지원 제한
+- 플러그인 생태계가 작음</pre>
+    </div>
+  </div>
+
+  <h2>Babel - 트랜스파일러</h2>
+
+  <p>최신 JavaScript 문법을 구형 브라우저에서도 동작하도록 변환합니다.
+  Java의 컴파일러가 소스 코드를 바이트코드로 변환하는 것과 유사합니다.</p>
+
+  <pre># 설치
+npm install -D @babel/core @babel/preset-env
+
+# babel.config.json
+{
+    "presets": [
+        ["@babel/preset-env", {
+            "targets": "> 0.25%, not dead"
+        }]
+    ]
+}
+
+# 변환 예시 (입력)
+const greet = (name = 'World') => `Hello, ${name}!`;
+const [a, ...rest] = [1, 2, 3, 4];
+
+# 변환 결과 (출력)
+"use strict";
+var greet = function greet() {
+    var name = arguments.length > 0 ? arguments[0] : 'World';
+    return "Hello, ".concat(name, "!");
+};
+var a = 1;
+var rest = [2, 3, 4];</pre>
+
+  <p>요즘은 대부분의 브라우저가 ES6를 지원하므로, IE 11 지원이 필요한 경우가 아니라면 Babel 없이도 개발할 수 있습니다.</p>
+
+  <h2>TypeScript</h2>
+
+  <p>TypeScript는 JavaScript에 정적 타입을 추가한 언어입니다.
+  Java 개발자에게 가장 익숙한 JavaScript 개발 환경을 제공합니다.</p>
+
+  <div class="compare">
+    <div class="java">
+      <h4>JAVA</h4>
+      <pre>public class User {
+    private String name;
+    private int age;
+
+    public User(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    public String greet() {
+        return "안녕, " + this.name;
+    }
+}
+
+User user = new User("홍길동", 30);</pre>
+    </div>
+    <div class="js">
+      <h4>TYPESCRIPT</h4>
+      <pre>class User {
+    private name: string;
+    private age: number;
+
+    constructor(name: string, age: number) {
+        this.name = name;
+        this.age = age;
+    }
+
+    greet(): string {
+        return `안녕, ${this.name}`;
+    }
+}
+
+const user: User = new User("홍길동", 30);</pre>
+    </div>
+  </div>
+
+  <h3>TypeScript 시작하기</h3>
+
+  <pre># 설치
+npm install -D typescript
+
+# 설정 파일 생성
+npx tsc --init
+
+# tsconfig.json
+{
+    "compilerOptions": {
+        "target": "ES2020",
+        "module": "ESNext",
+        "strict": true,
+        "outDir": "./dist",
+        "rootDir": "./src"
+    },
+    "include": ["src/**/*"]
+}
+
+# 컴파일
+npx tsc</pre>
+
+  <h3>기본 타입</h3>
+
+  <pre>// 기본 타입
+let name: string = "홍길동";
+let age: number = 30;
+let isActive: boolean = true;
+
+// 배열
+let numbers: number[] = [1, 2, 3];
+let names: Array&lt;string&gt; = ["a", "b"];
+
+// 객체
+let user: { name: string; age: number } = {
+    name: "홍길동",
+    age: 30
+};
+
+// 함수
+function add(a: number, b: number): number {
+    return a + b;
+}
+
+const greet = (name: string): string => `Hello, ${name}`;
+
+// 선택적 파라미터
+function greet(name: string, greeting?: string): string {
+    return `${greeting ?? "Hello"}, ${name}`;
+}</pre>
+
+  <h3>인터페이스와 타입</h3>
+
+  <pre>// 인터페이스 (Java의 interface와 유사)
+interface User {
+    id: number;
+    name: string;
+    email?: string;  // 선택적 프로퍼티
+    readonly createdAt: Date;  // 읽기 전용
+}
+
+// 확장
+interface Admin extends User {
+    role: string;
+    permissions: string[];
+}
+
+// 타입 별칭
+type ID = string | number;
+type Status = "pending" | "active" | "inactive";
+
+// 제네릭 (Java와 동일)
+interface ApiResponse&lt;T&gt; {
+    data: T;
+    status: number;
+    message: string;
+}
+
+const response: ApiResponse&lt;User&gt; = {
+    data: { id: 1, name: "홍길동", createdAt: new Date() },
+    status: 200,
+    message: "Success"
+};</pre>
+
+  <h3>타입 가드</h3>
+
+  <pre>// 유니온 타입
+function printId(id: string | number): void {
+    if (typeof id === "string") {
+        console.log(id.toUpperCase());  // string으로 추론
+    } else {
+        console.log(id.toFixed(2));     // number로 추론
+    }
+}
+
+// instanceof
+function processValue(value: Date | string): void {
+    if (value instanceof Date) {
+        console.log(value.toISOString());
+    } else {
+        console.log(value);
+    }
+}
+
+// 사용자 정의 타입 가드
+interface Dog { bark(): void; }
+interface Cat { meow(): void; }
+
+function isDog(animal: Dog | Cat): animal is Dog {
+    return (animal as Dog).bark !== undefined;
+}</pre>
+
+  <div class="keypoint">
+    <strong>TypeScript의 장점</strong>
+    <p>1. 컴파일 타임 타입 검사로 버그 사전 방지<br>
+    2. IDE 자동완성, 리팩토링 지원 향상<br>
+    3. 코드 문서화 효과<br>
+    4. Java 개발자에게 익숙한 문법<br>
+    5. 대규모 프로젝트 유지보수 용이</p>
+  </div>
+
+  <h2>린터와 포매터</h2>
+
+  <h3>ESLint - 린터</h3>
+
+  <p>코드 품질과 스타일을 검사합니다. Java의 CheckStyle, SpotBugs와 유사합니다.</p>
+
+  <pre># 설치
+npm install -D eslint
+
+# 설정 초기화
+npx eslint --init
+
+# eslint.config.js (Flat Config)
+export default [
+    {
+        rules: {
+            "no-unused-vars": "warn",
+            "no-console": "off",
+            "eqeqeq": "error"
+        }
+    }
+];
+
+# 실행
+npx eslint src/
+npx eslint src/ --fix  # 자동 수정</pre>
+
+  <h3>Prettier - 포매터</h3>
+
+  <p>코드 스타일을 일관되게 포맷합니다.</p>
+
+  <pre># 설치
+npm install -D prettier
+
+# .prettierrc
+{
+    "semi": true,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "es5"
+}
+
+# 실행
+npx prettier --write src/</pre>
+
+  <h2>프론트엔드 프레임워크</h2>
+
+  <p>JavaScript를 어느 정도 익혔다면, 프론트엔드 프레임워크를 배울 준비가 된 것입니다.</p>
+
+  <h3>React</h3>
+
+  <p>Facebook이 개발한 가장 인기 있는 UI 라이브러리입니다.
+  컴포넌트 기반 개발과 가상 DOM을 사용합니다.</p>
+
+  <pre># 프로젝트 생성
+npm create vite@latest my-app -- --template react
+# TypeScript 버전
+npm create vite@latest my-app -- --template react-ts
+
+// 컴포넌트 예시
+function Welcome({ name }) {
+    return &lt;h1&gt;안녕하세요, {name}님!&lt;/h1&gt;;
+}
+
+function App() {
+    const [count, setCount] = useState(0);
+
+    return (
+        &lt;div&gt;
+            &lt;Welcome name="홍길동" /&gt;
+            &lt;button onClick={() => setCount(count + 1)}&gt;
+                클릭 수: {count}
+            &lt;/button&gt;
+        &lt;/div&gt;
+    );
+}</pre>
+
+  <h3>Vue.js</h3>
+
+  <p>진입 장벽이 낮고 문서가 잘 되어 있는 프레임워크입니다.
+  HTML 템플릿 문법이 직관적입니다.</p>
+
+  <pre># 프로젝트 생성
+npm create vue@latest
+
+// 컴포넌트 예시 (Composition API)
+&lt;script setup&gt;
+import { ref } from 'vue';
+
+const count = ref(0);
+const increment = () => count.value++;
+&lt;/script&gt;
+
+&lt;template&gt;
+    &lt;h1&gt;안녕하세요, {{ name }}님!&lt;/h1&gt;
+    &lt;button @click="increment"&gt;
+        클릭 수: {{ count }}
+    &lt;/button&gt;
+&lt;/template&gt;</pre>
+
+  <h3>Angular</h3>
+
+  <p>Google이 개발한 풀 프레임워크입니다.
+  TypeScript를 기본으로 사용하며, Java/Spring 개발자에게 익숙한 구조입니다.</p>
+
+  <pre># 프로젝트 생성
+npm install -g @angular/cli
+ng new my-app
+
+// 컴포넌트 예시
+@Component({
+    selector: 'app-counter',
+    template: `
+        &lt;h1&gt;안녕하세요, {{ name }}님!&lt;/h1&gt;
+        &lt;button (click)="increment()"&gt;
+            클릭 수: {{ count }}
+        &lt;/button&gt;
+    `
+})
+export class CounterComponent {
+    name = '홍길동';
+    count = 0;
+
+    increment(): void {
+        this.count++;
+    }
+}</pre>
+
+  <h3>프레임워크 비교</h3>
+
+  <table>
+    <tr>
+      <th>특성</th>
+      <th>React</th>
+      <th>Vue</th>
+      <th>Angular</th>
+    </tr>
+    <tr>
+      <td>학습 곡선</td>
+      <td>중간</td>
+      <td>낮음</td>
+      <td>높음</td>
+    </tr>
+    <tr>
+      <td>타입스크립트</td>
+      <td>선택</td>
+      <td>선택</td>
+      <td>기본</td>
+    </tr>
+    <tr>
+      <td>생태계</td>
+      <td>가장 큼</td>
+      <td>성장 중</td>
+      <td>포괄적</td>
+    </tr>
+    <tr>
+      <td>주요 특징</td>
+      <td>유연함, JSX</td>
+      <td>간결함, 템플릿</td>
+      <td>풀 프레임워크</td>
+    </tr>
+    <tr>
+      <td>적합한 프로젝트</td>
+      <td>모든 규모</td>
+      <td>중소규모</td>
+      <td>대규모 엔터프라이즈</td>
+    </tr>
+  </table>
+
+  <h2>백엔드: Node.js</h2>
+
+  <p>JavaScript로 서버 사이드 개발도 가능합니다.
+  Java Spring과 비슷한 역할을 하는 프레임워크들이 있습니다.</p>
+
+  <h3>Express.js</h3>
+
+  <pre>const express = require('express');
+const app = express();
+
+app.use(express.json());
+
+// GET /api/users
+app.get('/api/users', (req, res) => {
+    res.json([{ id: 1, name: '홍길동' }]);
+});
+
+// POST /api/users
+app.post('/api/users', (req, res) => {
+    const user = req.body;
+    res.status(201).json(user);
+});
+
+app.listen(3000, () => {
+    console.log('서버 시작: http://localhost:3000');
+});</pre>
+
+  <h3>NestJS</h3>
+
+  <p>Angular에서 영감을 받은 Node.js 프레임워크로, Spring과 유사한 구조입니다.</p>
+
+  <pre>// Java Spring과 매우 유사한 구조
+@Controller('users')
+export class UsersController {
+    constructor(private usersService: UsersService) {}
+
+    @Get()
+    findAll(): User[] {
+        return this.usersService.findAll();
+    }
+
+    @Post()
+    create(@Body() createUserDto: CreateUserDto): User {
+        return this.usersService.create(createUserDto);
+    }
+}</pre>
+
+  <h2>학습 로드맵</h2>
+
+  <ol>
+    <li><strong>JavaScript 기초</strong>: 이 책의 내용 (완료!)</li>
+    <li><strong>TypeScript</strong>: 타입 시스템 학습</li>
+    <li><strong>프론트엔드 프레임워크</strong>: React 또는 Vue 선택</li>
+    <li><strong>상태 관리</strong>: Redux, Zustand, Pinia 등</li>
+    <li><strong>테스팅</strong>: Jest, Vitest, Testing Library</li>
+    <li><strong>빌드 도구</strong>: Vite, Webpack 심화</li>
+    <li><strong>(선택) 백엔드</strong>: Node.js, Express, NestJS</li>
+    <li><strong>(선택) 풀스택</strong>: Next.js, Nuxt.js</li>
+  </ol>
+
+  <h2>정리</h2>
+
+  <ul>
+    <li>npm: JavaScript 패키지 관리자 (Maven/Gradle과 유사)</li>
+    <li>package.json: 프로젝트 설정, 의존성, 스크립트 정의</li>
+    <li>번들러: Webpack(설정 복잡, 강력), Vite(빠름, 간단)</li>
+    <li>Babel: 최신 문법을 구형 브라우저용으로 변환</li>
+    <li>TypeScript: 정적 타입 추가, Java 개발자에게 권장</li>
+    <li>ESLint: 코드 품질 검사, Prettier: 코드 포맷팅</li>
+    <li>프레임워크: React(유연), Vue(간결), Angular(풀스택)</li>
+    <li>백엔드: Express(간단), NestJS(Spring과 유사)</li>
+  </ul>
+
+  <nav class="chapter-nav">
+    <a href="chapter7.html">← 7장. DOM과 이벤트</a>
+    <a href="chapter9.html">9장. 실전 프로젝트 →</a>
+  </nav>
+</main>

@@ -1,0 +1,813 @@
+<title>6장 · 비동기 프로그래밍 — 자바 개발자를 위한 JavaScript 입문</title>
+<style>
+  :root {
+    --paper: #EEF0EA;
+    --paper-raised: #FAFAF6;
+    --paper-card: #F5F6F1;
+    --ink: #201F1B;
+    --ink-soft: #5C5A4E;
+    --ink-faint: #8B8878;
+    --accent: #D4A017;
+    --accent-soft: #FDF6E3;
+    --accent-ink: #8B6914;
+    --highlight: #2E7D32;
+    --highlight-soft: #E8F5E9;
+    --line: #DEDCD0;
+    --line-strong: #C7C4B4;
+    --mono-bg: #1C2229;
+    --mono-fg: #DCE3E8;
+    --mono-dim: #7C8894;
+    --shadow: 0 1px 2px rgba(32,31,27,0.05), 0 10px 28px rgba(32,31,27,0.06);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Apple Myungjo", AppleMyungjo, Batang, "Noto Serif KR", Georgia, serif;
+    font-size: 17.5px;
+    line-height: 1.92;
+  }
+  .measure { max-width: 700px; margin: 0 auto; padding: 0 28px; }
+  h1, h2, h3 { font-weight: 700; color: var(--ink); }
+  h2 { font-size: 1.5em; margin: 2.5em 0 0.8em; padding-bottom: 0.3em; border-bottom: 1px solid var(--line); }
+  h3 { font-size: 1.2em; margin: 2em 0 0.6em; }
+  p { margin: 0 0 1.15em; }
+  a { color: var(--accent-ink); }
+  ul, ol { margin: 0 0 1.15em; padding-left: 1.5em; }
+  li { margin-bottom: 0.4em; }
+
+  .mono, code, pre { font-family: ui-monospace, "SF Mono", "JetBrains Mono", Consolas, monospace; }
+  code:not(pre code) {
+    background: var(--accent-soft);
+    color: var(--accent-ink);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 0.86em;
+  }
+  pre {
+    background: var(--mono-bg);
+    color: var(--mono-fg);
+    padding: 20px 24px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 1.5em 0;
+  }
+  pre .comment { color: var(--mono-dim); }
+  pre .keyword { color: #C792EA; }
+  pre .string { color: #C3E88D; }
+  pre .number { color: #F78C6C; }
+
+  .masthead {
+    border-bottom: 1px solid var(--line);
+    padding: 22px 0;
+    font-family: -apple-system, "Apple SD Gothic Neo", sans-serif;
+  }
+  .masthead .row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+  .masthead .series { font-size: 12.5px; letter-spacing: 0.12em; color: var(--accent); font-weight: 600; }
+  .masthead nav a { font-size: 13px; color: var(--ink-soft); text-decoration: none; margin-left: 18px; }
+
+  .chapter-header {
+    padding: 72px 0 56px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 48px;
+  }
+  .chapter-header .num {
+    font-family: -apple-system, sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .chapter-header h1 { font-size: 2.2em; margin: 0 0 18px; }
+  .chapter-header .lead { font-size: 1.1em; color: var(--ink-soft); line-height: 1.75; }
+
+  .keypoint {
+    background: var(--accent-soft);
+    border-left: 4px solid var(--accent);
+    padding: 20px 24px;
+    margin: 1.5em 0;
+    border-radius: 0 8px 8px 0;
+  }
+  .keypoint strong {
+    display: block;
+    color: var(--accent-ink);
+    margin-bottom: 8px;
+    font-family: -apple-system, sans-serif;
+    font-size: 14px;
+  }
+
+  .warning {
+    background: #FFF3E0;
+    border-left: 4px solid #FF9800;
+    padding: 20px 24px;
+    margin: 1.5em 0;
+    border-radius: 0 8px 8px 0;
+  }
+  .warning strong {
+    display: block;
+    color: #E65100;
+    margin-bottom: 8px;
+    font-family: -apple-system, sans-serif;
+    font-size: 14px;
+  }
+
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 1.5em 0;
+  }
+  .compare h4 {
+    font-family: -apple-system, sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    margin: 0 0 8px;
+    padding: 8px 16px;
+    border-radius: 6px 6px 0 0;
+  }
+  .compare .java h4 { background: #E8EAF6; color: #3F51B5; }
+  .compare .js h4 { background: var(--accent-soft); color: var(--accent-ink); }
+  .compare pre { margin: 0; border-radius: 0 0 6px 6px; }
+  @media (max-width: 700px) { .compare { grid-template-columns: 1fr; } }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5em 0;
+    font-size: 15px;
+  }
+  th, td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--line);
+  }
+  th {
+    background: var(--paper-card);
+    font-family: -apple-system, sans-serif;
+    font-weight: 600;
+  }
+
+  .chapter-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 32px 0;
+    margin-top: 48px;
+    border-top: 1px solid var(--line);
+    font-family: -apple-system, sans-serif;
+    font-size: 14px;
+  }
+  .chapter-nav a { color: var(--accent-ink); text-decoration: none; }
+</style>
+
+<header class="masthead">
+  <div class="measure">
+    <div class="row">
+      <span class="series">자바 개발자를 위한 JAVASCRIPT 입문</span>
+      <nav>
+        <a href="index.html">목차</a>
+        <a href="chapter5.html">← 이전</a>
+        <a href="chapter7.html">다음 →</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main class="measure">
+  <div class="chapter-header">
+    <div class="num">CHAPTER 6</div>
+    <h1>비동기 프로그래밍</h1>
+    <p class="lead">JavaScript는 싱글스레드지만 비동기 처리로 효율적입니다.
+    콜백, Promise, async/await를 이해하고 Java의 CompletableFuture와 비교합니다.</p>
+  </div>
+
+  <h2>동기 vs 비동기</h2>
+
+  <p>Java에서는 대부분의 작업이 동기적으로 실행됩니다.
+  파일을 읽거나 네트워크 요청을 보내면 결과가 올 때까지 스레드가 대기합니다.</p>
+
+  <p>JavaScript는 싱글스레드이므로 대기하면 전체 프로그램이 멈춥니다.
+  대신 비동기 처리로 작업을 시작하고, 완료되면 콜백을 실행합니다.</p>
+
+  <div class="compare">
+    <div class="java">
+      <h4>JAVA (동기)</h4>
+      <pre>// 파일 읽기 - 완료될 때까지 대기
+String content = Files.readString(path);
+System.out.println(content);
+System.out.println("다음 작업");
+
+// 출력 순서: content → "다음 작업"</pre>
+    </div>
+    <div class="js">
+      <h4>JAVASCRIPT (비동기)</h4>
+      <pre>// 파일 읽기 - 대기하지 않음
+fs.readFile(path, (err, data) => {
+    console.log(data);
+});
+console.log("다음 작업");
+
+// 출력 순서: "다음 작업" → data</pre>
+    </div>
+  </div>
+
+  <div class="keypoint">
+    <strong>이벤트 루프</strong>
+    <p>JavaScript는 이벤트 루프를 통해 비동기 작업을 처리합니다.
+    메인 스레드는 계속 실행되고, 비동기 작업이 완료되면 콜백이 큐에 추가되어 실행됩니다.</p>
+  </div>
+
+  <pre>console.log("1");
+
+setTimeout(() => {
+    console.log("2");
+}, 0);  // 0ms 후 실행
+
+console.log("3");
+
+// 출력: 1 → 3 → 2
+// setTimeout 콜백은 현재 실행 스택이 비워진 후에 실행됨</pre>
+
+  <h2>콜백 (Callback)</h2>
+
+  <p>비동기 작업이 완료되면 실행할 함수를 전달하는 가장 기본적인 패턴입니다.</p>
+
+  <pre>// 간단한 콜백 예제
+function fetchUser(id, callback) {
+    // 비동기 작업 시뮬레이션
+    setTimeout(() => {
+        const user = { id, name: "홍길동" };
+        callback(user);
+    }, 1000);
+}
+
+fetchUser(1, user => {
+    console.log(user.name);  // 1초 후 "홍길동"
+});
+
+// Node.js 스타일 (에러 우선 콜백)
+function readFile(path, callback) {
+    setTimeout(() => {
+        if (path === "invalid") {
+            callback(new Error("파일 없음"), null);
+        } else {
+            callback(null, "파일 내용");
+        }
+    }, 100);
+}
+
+readFile("test.txt", (err, data) => {
+    if (err) {
+        console.error("에러:", err.message);
+        return;
+    }
+    console.log(data);
+});</pre>
+
+  <h3>콜백 지옥 (Callback Hell)</h3>
+
+  <p>연속된 비동기 작업은 콜백이 중첩되어 읽기 어려워집니다.</p>
+
+  <pre>// 사용자 → 주문 → 상품 순서로 조회
+getUser(userId, (err, user) => {
+    if (err) {
+        console.error(err);
+        return;
+    }
+    getOrders(user.id, (err, orders) => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        getProduct(orders[0].productId, (err, product) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            console.log(product);
+            // 더 깊어질 수 있음...
+        });
+    });
+});</pre>
+
+  <div class="warning">
+    <strong>콜백 지옥의 문제</strong>
+    <p>1. 코드가 오른쪽으로 계속 들여쓰기됨<br>
+    2. 에러 처리가 각 콜백에서 반복됨<br>
+    3. 순서 이해와 디버깅이 어려움<br>
+    → 이 문제를 해결하기 위해 Promise가 등장했습니다.</p>
+  </div>
+
+  <h2>Promise</h2>
+
+  <p>Promise는 비동기 작업의 최종 완료 또는 실패를 나타내는 객체입니다.
+  ES6에서 도입되었습니다.</p>
+
+  <h3>Promise 생성</h3>
+
+  <pre>// Promise 생성
+const promise = new Promise((resolve, reject) => {
+    // 비동기 작업 수행
+    setTimeout(() => {
+        const success = true;
+
+        if (success) {
+            resolve("성공!");  // 완료
+        } else {
+            reject(new Error("실패!"));  // 실패
+        }
+    }, 1000);
+});
+
+// Promise 사용
+promise
+    .then(result => {
+        console.log(result);  // "성공!"
+    })
+    .catch(error => {
+        console.error(error);
+    });</pre>
+
+  <h3>Promise 상태</h3>
+
+  <table>
+    <tr>
+      <th>상태</th>
+      <th>설명</th>
+    </tr>
+    <tr>
+      <td>pending</td>
+      <td>대기 중 (초기 상태)</td>
+    </tr>
+    <tr>
+      <td>fulfilled</td>
+      <td>성공 (resolve 호출됨)</td>
+    </tr>
+    <tr>
+      <td>rejected</td>
+      <td>실패 (reject 호출됨)</td>
+    </tr>
+  </table>
+
+  <h3>then, catch, finally</h3>
+
+  <pre>fetchData()
+    .then(data => {
+        // 성공 시 실행
+        console.log(data);
+        return processData(data);  // 다음 Promise 반환
+    })
+    .then(result => {
+        // 이전 then의 반환값을 받음
+        console.log(result);
+    })
+    .catch(error => {
+        // 어디서든 에러 발생 시 실행
+        console.error("에러:", error);
+    })
+    .finally(() => {
+        // 성공/실패 관계없이 항상 실행
+        console.log("완료");
+    });</pre>
+
+  <h3>Promise 체이닝</h3>
+
+  <pre>// 콜백 지옥을 Promise로 개선
+getUser(userId)
+    .then(user => getOrders(user.id))
+    .then(orders => getProduct(orders[0].productId))
+    .then(product => {
+        console.log(product);
+    })
+    .catch(error => {
+        console.error(error);  // 어디서든 에러 처리
+    });</pre>
+
+  <h3>Promise 정적 메서드</h3>
+
+  <pre>// Promise.all - 모두 완료될 때까지 대기
+const promises = [
+    fetch('/api/users'),
+    fetch('/api/products'),
+    fetch('/api/orders')
+];
+
+Promise.all(promises)
+    .then(([users, products, orders]) => {
+        // 모두 성공
+    })
+    .catch(error => {
+        // 하나라도 실패하면 즉시 실행
+    });
+
+// Promise.allSettled - 모두 완료 (성공/실패 모두)
+Promise.allSettled(promises)
+    .then(results => {
+        results.forEach(result => {
+            if (result.status === 'fulfilled') {
+                console.log(result.value);
+            } else {
+                console.log(result.reason);
+            }
+        });
+    });
+
+// Promise.race - 가장 빠른 것 하나만
+Promise.race([
+    fetch('/api/fast'),
+    fetch('/api/slow')
+]).then(first => {
+    // 가장 먼저 완료된 것
+});
+
+// Promise.any - 가장 빠른 성공 하나
+Promise.any(promises).then(first => {
+    // 가장 먼저 성공한 것 (모두 실패하면 reject)
+});
+
+// Promise.resolve / Promise.reject
+Promise.resolve("즉시 성공");
+Promise.reject(new Error("즉시 실패"));</pre>
+
+  <h2>async/await</h2>
+
+  <p>ES2017에서 도입된 문법으로, Promise를 동기 코드처럼 작성할 수 있습니다.
+  가장 권장되는 비동기 처리 방식입니다.</p>
+
+  <div class="compare">
+    <div class="java">
+      <h4>JAVA</h4>
+      <pre>// CompletableFuture
+CompletableFuture&lt;User&gt; future =
+    getUser(userId);
+
+User user = future.get();  // 블로킹
+
+// 또는 비동기 체이닝
+getUser(userId)
+    .thenApply(user -> getOrders(user.id))
+    .thenApply(orders -> ...)
+    .exceptionally(ex -> ...);</pre>
+    </div>
+    <div class="js">
+      <h4>JAVASCRIPT</h4>
+      <pre>// async/await
+async function main() {
+    const user = await getUser(userId);
+    const orders = await getOrders(user.id);
+    const product = await getProduct(orders[0].id);
+    console.log(product);
+}
+
+// 동기 코드처럼 읽히지만 실제로는 비동기</pre>
+    </div>
+  </div>
+
+  <h3>기본 문법</h3>
+
+  <pre>// async 함수는 항상 Promise를 반환
+async function fetchUser(id) {
+    const response = await fetch(`/api/users/${id}`);
+    const user = await response.json();
+    return user;  // Promise로 감싸져서 반환
+}
+
+// 사용
+fetchUser(1).then(user => console.log(user));
+
+// 또는 다른 async 함수에서
+async function main() {
+    const user = await fetchUser(1);
+    console.log(user);
+}
+
+// 화살표 함수
+const fetchUser = async (id) => {
+    const response = await fetch(`/api/users/${id}`);
+    return response.json();
+};</pre>
+
+  <h3>에러 처리</h3>
+
+  <pre>// try/catch 사용
+async function fetchUser(id) {
+    try {
+        const response = await fetch(`/api/users/${id}`);
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const user = await response.json();
+        return user;
+    } catch (error) {
+        console.error("사용자 조회 실패:", error);
+        throw error;  // 다시 던지거나 기본값 반환
+    }
+}
+
+// 또는 호출하는 쪽에서 처리
+async function main() {
+    try {
+        const user = await fetchUser(1);
+        const orders = await getOrders(user.id);
+    } catch (error) {
+        console.error("에러 발생:", error);
+    } finally {
+        console.log("완료");
+    }
+}</pre>
+
+  <h3>병렬 실행</h3>
+
+  <pre>// 순차 실행 (느림)
+async function sequential() {
+    const user = await fetchUser(1);     // 1초
+    const products = await fetchProducts();  // 1초
+    // 총 2초
+}
+
+// 병렬 실행 (빠름)
+async function parallel() {
+    const [user, products] = await Promise.all([
+        fetchUser(1),      // 동시에 시작
+        fetchProducts()    // 동시에 시작
+    ]);
+    // 총 1초 (가장 느린 것 기준)
+}
+
+// 병렬로 시작하고 순차로 사용
+async function hybrid() {
+    // 먼저 모두 시작
+    const userPromise = fetchUser(1);
+    const productsPromise = fetchProducts();
+
+    // 필요할 때 await
+    const user = await userPromise;
+    console.log(user);
+
+    const products = await productsPromise;
+    console.log(products);
+}</pre>
+
+  <div class="keypoint">
+    <strong>await는 순차 실행</strong>
+    <p>여러 await를 연속으로 작성하면 순차 실행됩니다.
+    독립적인 작업은 <code>Promise.all()</code>로 병렬 실행하세요.</p>
+  </div>
+
+  <h3>반복문에서의 async/await</h3>
+
+  <pre>const userIds = [1, 2, 3, 4, 5];
+
+// 순차 실행 (하나씩)
+async function sequential() {
+    for (const id of userIds) {
+        const user = await fetchUser(id);
+        console.log(user);
+    }
+}
+
+// 병렬 실행 (모두 동시에)
+async function parallel() {
+    const users = await Promise.all(
+        userIds.map(id => fetchUser(id))
+    );
+    users.forEach(user => console.log(user));
+}
+
+// 주의: forEach는 await를 기다리지 않음!
+async function wrong() {
+    userIds.forEach(async (id) => {
+        const user = await fetchUser(id);
+        console.log(user);
+    });
+    console.log("완료");  // 모든 fetch 전에 출력됨!
+}</pre>
+
+  <h2>Java CompletableFuture와 비교</h2>
+
+  <div class="compare">
+    <div class="java">
+      <h4>JAVA</h4>
+      <pre>// 비동기 작업 생성
+CompletableFuture&lt;String&gt; future =
+    CompletableFuture.supplyAsync(() -> {
+        return "결과";
+    });
+
+// 체이닝
+future
+    .thenApply(s -> s.toUpperCase())
+    .thenAccept(System.out::println)
+    .exceptionally(ex -> {
+        System.err.println(ex);
+        return null;
+    });
+
+// 여러 작업 병렬
+CompletableFuture.allOf(f1, f2, f3)
+    .thenRun(() -> {...});</pre>
+    </div>
+    <div class="js">
+      <h4>JAVASCRIPT</h4>
+      <pre>// Promise 생성
+const promise = new Promise(resolve => {
+    resolve("결과");
+});
+
+// 체이닝
+promise
+    .then(s => s.toUpperCase())
+    .then(console.log)
+    .catch(console.error);
+
+// 여러 작업 병렬
+Promise.all([p1, p2, p3])
+    .then(() => {...});
+
+// async/await (더 권장)
+const result = await promise;</pre>
+    </div>
+  </div>
+
+  <table>
+    <tr>
+      <th>기능</th>
+      <th>Java CompletableFuture</th>
+      <th>JavaScript</th>
+    </tr>
+    <tr>
+      <td>비동기 실행</td>
+      <td>supplyAsync()</td>
+      <td>new Promise()</td>
+    </tr>
+    <tr>
+      <td>변환</td>
+      <td>thenApply()</td>
+      <td>then()</td>
+    </tr>
+    <tr>
+      <td>소비</td>
+      <td>thenAccept()</td>
+      <td>then()</td>
+    </tr>
+    <tr>
+      <td>에러 처리</td>
+      <td>exceptionally()</td>
+      <td>catch()</td>
+    </tr>
+    <tr>
+      <td>병렬</td>
+      <td>allOf()</td>
+      <td>Promise.all()</td>
+    </tr>
+    <tr>
+      <td>경쟁</td>
+      <td>anyOf()</td>
+      <td>Promise.race()</td>
+    </tr>
+    <tr>
+      <td>동기 대기</td>
+      <td>get(), join()</td>
+      <td>await (async 함수 내)</td>
+    </tr>
+  </table>
+
+  <h2>실전 패턴</h2>
+
+  <h3>Fetch API</h3>
+
+  <pre>// 기본 GET 요청
+const response = await fetch('/api/users');
+const users = await response.json();
+
+// POST 요청
+const response = await fetch('/api/users', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ name: '홍길동', age: 30 })
+});
+
+// 에러 체크 (fetch는 HTTP 에러를 reject하지 않음!)
+async function fetchWithErrorHandling(url) {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+    }
+
+    return response.json();
+}</pre>
+
+  <h3>타임아웃 구현</h3>
+
+  <pre>function timeout(ms) {
+    return new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Timeout')), ms);
+    });
+}
+
+// Promise.race로 타임아웃 구현
+async function fetchWithTimeout(url, ms = 5000) {
+    return Promise.race([
+        fetch(url),
+        timeout(ms)
+    ]);
+}
+
+try {
+    const response = await fetchWithTimeout('/api/slow', 3000);
+} catch (error) {
+    if (error.message === 'Timeout') {
+        console.log('요청 시간 초과');
+    }
+}</pre>
+
+  <h3>재시도 로직</h3>
+
+  <pre>async function fetchWithRetry(url, maxRetries = 3) {
+    for (let i = 0; i < maxRetries; i++) {
+        try {
+            const response = await fetch(url);
+            if (response.ok) {
+                return response.json();
+            }
+        } catch (error) {
+            console.log(`시도 ${i + 1} 실패`);
+
+            if (i === maxRetries - 1) {
+                throw error;
+            }
+
+            // 지수 백오프
+            await new Promise(r => setTimeout(r, 1000 * (i + 1)));
+        }
+    }
+}</pre>
+
+  <h3>동시성 제한</h3>
+
+  <pre>// 한 번에 최대 3개씩만 실행
+async function limitConcurrency(tasks, limit = 3) {
+    const results = [];
+    const executing = [];
+
+    for (const task of tasks) {
+        const p = task().then(result => {
+            executing.splice(executing.indexOf(p), 1);
+            return result;
+        });
+
+        results.push(p);
+        executing.push(p);
+
+        if (executing.length >= limit) {
+            await Promise.race(executing);
+        }
+    }
+
+    return Promise.all(results);
+}
+
+// 사용 예
+const urls = ['/api/1', '/api/2', '/api/3', '/api/4', '/api/5'];
+const tasks = urls.map(url => () => fetch(url));
+const results = await limitConcurrency(tasks, 2);</pre>
+
+  <h2>Top-level await</h2>
+
+  <p>ES2022부터 모듈의 최상위 레벨에서 await를 사용할 수 있습니다.</p>
+
+  <pre>// config.js (ES 모듈)
+const response = await fetch('/api/config');
+export const config = await response.json();
+
+// main.js
+import { config } from './config.js';
+// config가 로드된 후에 이 코드가 실행됨
+console.log(config.apiUrl);</pre>
+
+  <h2>정리</h2>
+
+  <ul>
+    <li>JavaScript는 싱글스레드, 이벤트 루프로 비동기 처리</li>
+    <li>콜백: 기본 패턴이지만 중첩되면 읽기 어려움 (콜백 지옥)</li>
+    <li>Promise: <code>then</code>, <code>catch</code>, <code>finally</code>로 체이닝</li>
+    <li><code>Promise.all()</code>: 모두 완료 대기, <code>Promise.race()</code>: 가장 빠른 것</li>
+    <li>async/await: 가장 권장되는 방식, 동기 코드처럼 작성</li>
+    <li>여러 await는 순차 실행 → 독립적인 작업은 <code>Promise.all()</code>로 병렬화</li>
+    <li>에러 처리: try/catch 또는 .catch()</li>
+    <li>fetch는 HTTP 에러를 reject하지 않으므로 response.ok 확인 필요</li>
+  </ul>
+
+  <nav class="chapter-nav">
+    <a href="chapter5.html">← 5장. 클래스와 모듈</a>
+    <a href="chapter7.html">7장. DOM과 이벤트 →</a>
+  </nav>
+</main>

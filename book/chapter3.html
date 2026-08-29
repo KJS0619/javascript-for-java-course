@@ -1,0 +1,778 @@
+<title>3장 · 함수의 모든 것 — 자바 개발자를 위한 JavaScript 입문</title>
+<style>
+  :root {
+    --paper: #EEF0EA;
+    --paper-raised: #FAFAF6;
+    --paper-card: #F5F6F1;
+    --ink: #201F1B;
+    --ink-soft: #5C5A4E;
+    --ink-faint: #8B8878;
+    --accent: #D4A017;
+    --accent-soft: #FDF6E3;
+    --accent-ink: #8B6914;
+    --highlight: #2E7D32;
+    --highlight-soft: #E8F5E9;
+    --line: #DEDCD0;
+    --line-strong: #C7C4B4;
+    --mono-bg: #1C2229;
+    --mono-fg: #DCE3E8;
+    --mono-dim: #7C8894;
+    --shadow: 0 1px 2px rgba(32,31,27,0.05), 0 10px 28px rgba(32,31,27,0.06);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Apple Myungjo", AppleMyungjo, Batang, "Noto Serif KR", Georgia, serif;
+    font-size: 17.5px;
+    line-height: 1.92;
+  }
+  .measure { max-width: 700px; margin: 0 auto; padding: 0 28px; }
+  h1, h2, h3 { font-weight: 700; color: var(--ink); }
+  h2 { font-size: 1.5em; margin: 2.5em 0 0.8em; padding-bottom: 0.3em; border-bottom: 1px solid var(--line); }
+  h3 { font-size: 1.2em; margin: 2em 0 0.6em; }
+  p { margin: 0 0 1.15em; }
+  a { color: var(--accent-ink); }
+  ul, ol { margin: 0 0 1.15em; padding-left: 1.5em; }
+  li { margin-bottom: 0.4em; }
+
+  .mono, code, pre { font-family: ui-monospace, "SF Mono", "JetBrains Mono", Consolas, monospace; }
+  code:not(pre code) {
+    background: var(--accent-soft);
+    color: var(--accent-ink);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 0.86em;
+  }
+  pre {
+    background: var(--mono-bg);
+    color: var(--mono-fg);
+    padding: 20px 24px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 1.5em 0;
+  }
+  pre .comment { color: var(--mono-dim); }
+  pre .keyword { color: #C792EA; }
+  pre .string { color: #C3E88D; }
+  pre .number { color: #F78C6C; }
+
+  .masthead {
+    border-bottom: 1px solid var(--line);
+    padding: 22px 0;
+    font-family: -apple-system, "Apple SD Gothic Neo", sans-serif;
+  }
+  .masthead .row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+  .masthead .series { font-size: 12.5px; letter-spacing: 0.12em; color: var(--accent); font-weight: 600; }
+  .masthead nav a { font-size: 13px; color: var(--ink-soft); text-decoration: none; margin-left: 18px; }
+
+  .chapter-header {
+    padding: 72px 0 56px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 48px;
+  }
+  .chapter-header .num {
+    font-family: -apple-system, sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .chapter-header h1 { font-size: 2.2em; margin: 0 0 18px; }
+  .chapter-header .lead { font-size: 1.1em; color: var(--ink-soft); line-height: 1.75; }
+
+  .keypoint {
+    background: var(--accent-soft);
+    border-left: 4px solid var(--accent);
+    padding: 20px 24px;
+    margin: 1.5em 0;
+    border-radius: 0 8px 8px 0;
+  }
+  .keypoint strong {
+    display: block;
+    color: var(--accent-ink);
+    margin-bottom: 8px;
+    font-family: -apple-system, sans-serif;
+    font-size: 14px;
+  }
+
+  .warning {
+    background: #FFF3E0;
+    border-left: 4px solid #FF9800;
+    padding: 20px 24px;
+    margin: 1.5em 0;
+    border-radius: 0 8px 8px 0;
+  }
+  .warning strong {
+    display: block;
+    color: #E65100;
+    margin-bottom: 8px;
+    font-family: -apple-system, sans-serif;
+    font-size: 14px;
+  }
+
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 1.5em 0;
+  }
+  .compare h4 {
+    font-family: -apple-system, sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    margin: 0 0 8px;
+    padding: 8px 16px;
+    border-radius: 6px 6px 0 0;
+  }
+  .compare .java h4 { background: #E8EAF6; color: #3F51B5; }
+  .compare .js h4 { background: var(--accent-soft); color: var(--accent-ink); }
+  .compare pre { margin: 0; border-radius: 0 0 6px 6px; }
+  @media (max-width: 700px) { .compare { grid-template-columns: 1fr; } }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5em 0;
+    font-size: 15px;
+  }
+  th, td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--line);
+  }
+  th {
+    background: var(--paper-card);
+    font-family: -apple-system, sans-serif;
+    font-weight: 600;
+  }
+
+  .chapter-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 32px 0;
+    margin-top: 48px;
+    border-top: 1px solid var(--line);
+    font-family: -apple-system, sans-serif;
+    font-size: 14px;
+  }
+  .chapter-nav a { color: var(--accent-ink); text-decoration: none; }
+</style>
+
+<header class="masthead">
+  <div class="measure">
+    <div class="row">
+      <span class="series">자바 개발자를 위한 JAVASCRIPT 입문</span>
+      <nav>
+        <a href="index.html">목차</a>
+        <a href="chapter2.html">← 이전</a>
+        <a href="chapter4.html">다음 →</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main class="measure">
+  <div class="chapter-header">
+    <div class="num">CHAPTER 3</div>
+    <h1>함수의 모든 것</h1>
+    <p class="lead">JavaScript에서 함수는 단순한 코드 블록이 아닌 일급 객체입니다.
+    함수 선언 방식, 화살표 함수, 클로저를 이해하고 Java의 메서드와 비교합니다.</p>
+  </div>
+
+  <h2>Java의 메서드 vs JavaScript의 함수</h2>
+
+  <p>Java에서 메서드는 반드시 클래스 안에 있어야 합니다.
+  JavaScript에서 함수는 독립적으로 존재할 수 있으며, 변수에 할당하거나 다른 함수에 전달할 수 있습니다.</p>
+
+  <div class="compare">
+    <div class="java">
+      <h4>JAVA</h4>
+      <pre>// 메서드는 클래스에 종속
+public class Calculator {
+    public int add(int a, int b) {
+        return a + b;
+    }
+}
+
+// 사용하려면 인스턴스 필요
+Calculator calc = new Calculator();
+int result = calc.add(1, 2);</pre>
+    </div>
+    <div class="js">
+      <h4>JAVASCRIPT</h4>
+      <pre>// 함수는 독립적으로 존재
+function add(a, b) {
+    return a + b;
+}
+
+// 바로 사용 가능
+const result = add(1, 2);
+
+// 변수에 할당 가능
+const myAdd = add;
+myAdd(1, 2);  // 3</pre>
+    </div>
+  </div>
+
+  <div class="keypoint">
+    <strong>일급 객체 (First-class Object)</strong>
+    <p>JavaScript에서 함수는 일급 객체입니다. 즉:<br>
+    1. 변수에 할당할 수 있음<br>
+    2. 다른 함수의 인자로 전달할 수 있음<br>
+    3. 다른 함수의 반환값이 될 수 있음<br>
+    4. 배열이나 객체에 저장할 수 있음</p>
+  </div>
+
+  <h2>함수 선언 방식</h2>
+
+  <p>JavaScript에서 함수를 정의하는 방법은 여러 가지가 있습니다.</p>
+
+  <h3>1. 함수 선언문 (Function Declaration)</h3>
+
+  <pre>function greet(name) {
+    return `안녕하세요, ${name}님!`;
+}
+
+console.log(greet("홍길동"));  // "안녕하세요, 홍길동님!"</pre>
+
+  <p>함수 선언문은 <strong>호이스팅</strong>됩니다.
+  코드의 어디서든 함수를 호출할 수 있습니다.</p>
+
+  <pre>// 선언 전에 호출해도 동작함 (호이스팅)
+sayHello();  // "Hello!"
+
+function sayHello() {
+    console.log("Hello!");
+}</pre>
+
+  <h3>2. 함수 표현식 (Function Expression)</h3>
+
+  <pre>const greet = function(name) {
+    return `안녕하세요, ${name}님!`;
+};
+
+console.log(greet("홍길동"));  // "안녕하세요, 홍길동님!"</pre>
+
+  <p>함수 표현식은 호이스팅되지 않습니다. 선언 전에 호출하면 에러가 발생합니다.</p>
+
+  <pre>// sayHello();  // ReferenceError: Cannot access before initialization
+
+const sayHello = function() {
+    console.log("Hello!");
+};
+
+sayHello();  // "Hello!"</pre>
+
+  <h3>3. 화살표 함수 (Arrow Function)</h3>
+
+  <p>ES6에서 도입된 간결한 함수 문법입니다. Java의 람다 표현식과 비슷합니다.</p>
+
+  <div class="compare">
+    <div class="java">
+      <h4>JAVA (람다)</h4>
+      <pre>// 함수형 인터페이스 필요
+Function&lt;String, String&gt; greet =
+    name -> "안녕, " + name + "!";
+
+// Stream에서 주로 사용
+list.stream()
+    .filter(x -> x > 0)
+    .map(x -> x * 2)
+    .collect(Collectors.toList());</pre>
+    </div>
+    <div class="js">
+      <h4>JAVASCRIPT</h4>
+      <pre>// 화살표 함수
+const greet = name => `안녕, ${name}!`;
+
+// 배열 메서드에서 주로 사용
+const result = list
+    .filter(x => x > 0)
+    .map(x => x * 2);</pre>
+    </div>
+  </div>
+
+  <pre>// 다양한 화살표 함수 형태
+
+// 파라미터 1개: 괄호 생략 가능
+const square = x => x * x;
+
+// 파라미터 0개: 괄호 필수
+const getRandom = () => Math.random();
+
+// 파라미터 2개 이상: 괄호 필수
+const add = (a, b) => a + b;
+
+// 본문이 여러 줄: 중괄호와 return 필요
+const greet = name => {
+    const message = `안녕하세요, ${name}님!`;
+    return message;
+};
+
+// 객체 반환: 괄호로 감싸기
+const createUser = name => ({ name: name, age: 0 });</pre>
+
+  <div class="warning">
+    <strong>화살표 함수의 this</strong>
+    <p>화살표 함수는 자신만의 <code>this</code>를 가지지 않습니다.
+    외부 스코프의 <code>this</code>를 그대로 사용합니다.
+    이 특성은 콜백 함수에서 유용하지만, 메서드 정의에는 부적합합니다.</p>
+  </div>
+
+  <h3>함수 선언 방식 비교</h3>
+
+  <table>
+    <tr>
+      <th>방식</th>
+      <th>호이스팅</th>
+      <th>this</th>
+      <th>용도</th>
+    </tr>
+    <tr>
+      <td>함수 선언문</td>
+      <td>O</td>
+      <td>동적 바인딩</td>
+      <td>일반 함수, 메서드</td>
+    </tr>
+    <tr>
+      <td>함수 표현식</td>
+      <td>X</td>
+      <td>동적 바인딩</td>
+      <td>콜백, 조건부 정의</td>
+    </tr>
+    <tr>
+      <td>화살표 함수</td>
+      <td>X</td>
+      <td>렉시컬 (상위 스코프)</td>
+      <td>콜백, 짧은 함수</td>
+    </tr>
+  </table>
+
+  <h2>파라미터와 인자</h2>
+
+  <h3>기본값 파라미터</h3>
+
+  <div class="compare">
+    <div class="java">
+      <h4>JAVA</h4>
+      <pre>// 기본값 파라미터 없음
+// 메서드 오버로딩으로 대체
+public String greet(String name) {
+    return greet(name, "안녕");
+}
+
+public String greet(String name, String msg) {
+    return msg + ", " + name + "!";
+}</pre>
+    </div>
+    <div class="js">
+      <h4>JAVASCRIPT</h4>
+      <pre>// 기본값 파라미터 지원
+function greet(name, message = "안녕") {
+    return `${message}, ${name}!`;
+}
+
+greet("홍길동");         // "안녕, 홍길동!"
+greet("홍길동", "반가워"); // "반가워, 홍길동!"</pre>
+    </div>
+  </div>
+
+  <h3>나머지 파라미터 (Rest Parameters)</h3>
+
+  <div class="compare">
+    <div class="java">
+      <h4>JAVA</h4>
+      <pre>// 가변 인자
+public int sum(int... numbers) {
+    int total = 0;
+    for (int n : numbers) {
+        total += n;
+    }
+    return total;
+}
+
+sum(1, 2, 3);  // 6</pre>
+    </div>
+    <div class="js">
+      <h4>JAVASCRIPT</h4>
+      <pre>// 나머지 파라미터
+function sum(...numbers) {
+    return numbers.reduce((a, b) => a + b, 0);
+}
+
+sum(1, 2, 3);  // 6
+
+// 일부 파라미터 + 나머지
+function log(level, ...messages) {
+    console.log(`[${level}]`, ...messages);
+}</pre>
+    </div>
+  </div>
+
+  <h3>arguments 객체 (레거시)</h3>
+
+  <pre>// ES6 이전에 사용하던 방식 (권장하지 않음)
+function oldSum() {
+    let total = 0;
+    for (let i = 0; i < arguments.length; i++) {
+        total += arguments[i];
+    }
+    return total;
+}
+
+// 화살표 함수에서는 arguments 사용 불가
+const arrowSum = () => {
+    // console.log(arguments);  // ReferenceError
+};
+
+// 항상 나머지 파라미터 사용
+const modernSum = (...args) => args.reduce((a, b) => a + b, 0);</pre>
+
+  <h2>콜백 함수</h2>
+
+  <p>함수를 다른 함수의 인자로 전달하는 패턴입니다.
+  JavaScript에서 매우 흔하게 사용됩니다.</p>
+
+  <div class="compare">
+    <div class="java">
+      <h4>JAVA</h4>
+      <pre>// 함수형 인터페이스로 콜백 구현
+list.forEach(item -> {
+    System.out.println(item);
+});
+
+// 또는 메서드 레퍼런스
+list.forEach(System.out::println);
+
+// Comparator로 정렬
+list.sort((a, b) -> a.compareTo(b));</pre>
+    </div>
+    <div class="js">
+      <h4>JAVASCRIPT</h4>
+      <pre>// 함수를 직접 전달
+list.forEach(item => {
+    console.log(item);
+});
+
+// 또는 함수 이름으로 전달
+list.forEach(console.log);
+
+// 정렬
+list.sort((a, b) => a - b);</pre>
+    </div>
+  </div>
+
+  <pre>// 콜백 패턴 예제
+function fetchData(callback) {
+    // 데이터를 가져온 후 콜백 호출
+    const data = { name: "홍길동" };
+    callback(data);
+}
+
+fetchData(data => {
+    console.log(data.name);  // "홍길동"
+});
+
+// 에러 처리 콜백 (Node.js 스타일)
+function readFile(path, callback) {
+    // callback(error, data) 형태
+    if (error) {
+        callback(error, null);
+    } else {
+        callback(null, fileData);
+    }
+}
+
+readFile("test.txt", (err, data) => {
+    if (err) {
+        console.error("에러:", err);
+        return;
+    }
+    console.log(data);
+});</pre>
+
+  <h2>클로저 (Closure)</h2>
+
+  <p>클로저는 함수가 선언될 때의 렉시컬 환경을 기억하는 것입니다.
+  Java에서는 비슷한 개념이 없어 처음에는 어려울 수 있습니다.</p>
+
+  <pre>function createCounter() {
+    let count = 0;  // 외부에서 접근 불가
+
+    return {
+        increment() {
+            count++;
+            return count;
+        },
+        decrement() {
+            count--;
+            return count;
+        },
+        getCount() {
+            return count;
+        }
+    };
+}
+
+const counter = createCounter();
+console.log(counter.getCount());   // 0
+console.log(counter.increment());  // 1
+console.log(counter.increment());  // 2
+console.log(counter.decrement());  // 1
+
+// count 변수에 직접 접근 불가능
+// console.log(counter.count);  // undefined</pre>
+
+  <div class="keypoint">
+    <strong>클로저의 핵심</strong>
+    <p>내부 함수가 외부 함수의 변수에 접근할 수 있으며,
+    외부 함수가 종료된 후에도 그 변수들이 살아있습니다.
+    이를 통해 private 변수를 구현할 수 있습니다.</p>
+  </div>
+
+  <div class="compare">
+    <div class="java">
+      <h4>JAVA</h4>
+      <pre>// private 변수는 클래스로 구현
+public class Counter {
+    private int count = 0;
+
+    public int increment() {
+        return ++count;
+    }
+
+    public int getCount() {
+        return count;
+    }
+}</pre>
+    </div>
+    <div class="js">
+      <h4>JAVASCRIPT</h4>
+      <pre>// 클로저로 private 변수 구현
+function createCounter() {
+    let count = 0;  // private
+
+    return {
+        increment: () => ++count,
+        getCount: () => count
+    };
+}</pre>
+    </div>
+  </div>
+
+  <h3>클로저 활용 예제</h3>
+
+  <pre>// 1. 함수 팩토리
+function createMultiplier(multiplier) {
+    return function(number) {
+        return number * multiplier;
+    };
+}
+
+const double = createMultiplier(2);
+const triple = createMultiplier(3);
+
+console.log(double(5));  // 10
+console.log(triple(5));  // 15
+
+// 2. 메모이제이션 (캐싱)
+function memoize(fn) {
+    const cache = {};
+
+    return function(...args) {
+        const key = JSON.stringify(args);
+        if (cache[key] === undefined) {
+            cache[key] = fn(...args);
+        }
+        return cache[key];
+    };
+}
+
+const expensiveCalculation = memoize(n => {
+    console.log("계산 중...");
+    return n * n;
+});
+
+expensiveCalculation(5);  // "계산 중..." → 25
+expensiveCalculation(5);  // 캐시에서 반환 → 25</pre>
+
+  <h3>클로저 주의점: 루프에서의 var</h3>
+
+  <pre>// var를 사용한 잘못된 예
+for (var i = 0; i < 3; i++) {
+    setTimeout(() => {
+        console.log(i);  // 3, 3, 3 출력!
+    }, 100);
+}
+// var는 함수 스코프이므로 i는 하나만 존재
+
+// let을 사용한 올바른 예
+for (let i = 0; i < 3; i++) {
+    setTimeout(() => {
+        console.log(i);  // 0, 1, 2 출력
+    }, 100);
+}
+// let은 블록 스코프이므로 각 반복마다 새로운 i</pre>
+
+  <h2>this 바인딩</h2>
+
+  <p>Java에서 <code>this</code>는 항상 현재 인스턴스를 가리킵니다.
+  JavaScript에서 <code>this</code>는 함수가 <strong>어떻게 호출되었는지</strong>에 따라 달라집니다.</p>
+
+  <pre>const user = {
+    name: "홍길동",
+
+    // 일반 함수: this는 호출 객체
+    greet() {
+        console.log(`안녕, ${this.name}!`);
+    },
+
+    // 화살표 함수: this는 상위 스코프
+    greetArrow: () => {
+        console.log(`안녕, ${this.name}!`);  // this는 user가 아님!
+    }
+};
+
+user.greet();      // "안녕, 홍길동!"
+user.greetArrow(); // "안녕, undefined!" (또는 전역 객체의 name)</pre>
+
+  <h3>this가 달라지는 경우</h3>
+
+  <pre>const user = {
+    name: "홍길동",
+    greet() {
+        console.log(`안녕, ${this.name}!`);
+    }
+};
+
+// 1. 메서드로 호출 - this는 user
+user.greet();  // "안녕, 홍길동!"
+
+// 2. 함수로 추출하여 호출 - this가 사라짐
+const fn = user.greet;
+fn();  // "안녕, undefined!" (strict mode에서는 에러)
+
+// 3. 콜백으로 전달 - this가 사라짐
+setTimeout(user.greet, 100);  // "안녕, undefined!"</pre>
+
+  <h3>this 바인딩 해결 방법</h3>
+
+  <pre>const user = {
+    name: "홍길동",
+    greet() {
+        console.log(`안녕, ${this.name}!`);
+    }
+};
+
+// 방법 1: bind() 사용
+const boundGreet = user.greet.bind(user);
+setTimeout(boundGreet, 100);  // "안녕, 홍길동!"
+
+// 방법 2: 화살표 함수로 감싸기
+setTimeout(() => user.greet(), 100);  // "안녕, 홍길동!"
+
+// 방법 3: 클래스에서 화살표 함수 사용
+class User {
+    name = "홍길동";
+
+    // 화살표 함수로 메서드 정의
+    greet = () => {
+        console.log(`안녕, ${this.name}!`);
+    };
+}
+
+const u = new User();
+setTimeout(u.greet, 100);  // "안녕, 홍길동!"</pre>
+
+  <h2>고차 함수 (Higher-Order Function)</h2>
+
+  <p>함수를 인자로 받거나 함수를 반환하는 함수입니다.
+  Java 8의 함수형 프로그래밍과 유사합니다.</p>
+
+  <pre>// 함수를 인자로 받는 고차 함수
+function repeat(n, action) {
+    for (let i = 0; i < n; i++) {
+        action(i);
+    }
+}
+
+repeat(3, console.log);  // 0, 1, 2
+
+// 함수를 반환하는 고차 함수
+function greaterThan(n) {
+    return m => m > n;
+}
+
+const greaterThan10 = greaterThan(10);
+console.log(greaterThan10(11));  // true
+console.log(greaterThan10(9));   // false
+
+// 배열 메서드와 함께 사용
+const numbers = [1, 2, 3, 4, 5];
+
+// map: 변환
+const doubled = numbers.map(x => x * 2);  // [2, 4, 6, 8, 10]
+
+// filter: 필터링
+const evens = numbers.filter(x => x % 2 === 0);  // [2, 4]
+
+// reduce: 축약
+const sum = numbers.reduce((acc, x) => acc + x, 0);  // 15
+
+// 체이닝
+const result = numbers
+    .filter(x => x % 2 === 1)  // 홀수만
+    .map(x => x * x)            // 제곱
+    .reduce((a, b) => a + b);   // 합계
+// 1 + 9 + 25 = 35</pre>
+
+  <h2>즉시 실행 함수 (IIFE)</h2>
+
+  <p>함수를 정의하자마자 실행하는 패턴입니다. 스코프 격리에 사용됩니다.</p>
+
+  <pre>// 즉시 실행 함수 표현식 (IIFE)
+(function() {
+    const privateVar = "비밀";
+    console.log(privateVar);
+})();
+
+// 화살표 함수 버전
+(() => {
+    const privateVar = "비밀";
+    console.log(privateVar);
+})();
+
+// 값을 반환받을 수도 있음
+const result = (() => {
+    const a = 10;
+    const b = 20;
+    return a + b;
+})();
+
+console.log(result);  // 30</pre>
+
+  <p>ES6 이전에는 변수 스코프를 만들기 위해 IIFE를 많이 사용했습니다.
+  지금은 <code>let</code>/<code>const</code>의 블록 스코프로 대체되어 사용 빈도가 줄었습니다.</p>
+
+  <h2>정리</h2>
+
+  <ul>
+    <li>JavaScript의 함수는 일급 객체 - 변수에 할당, 인자로 전달, 반환값으로 사용 가능</li>
+    <li>함수 선언문은 호이스팅됨, 함수 표현식과 화살표 함수는 호이스팅되지 않음</li>
+    <li>화살표 함수는 간결하지만 자체 <code>this</code>가 없음 (상위 스코프의 <code>this</code> 사용)</li>
+    <li>기본값 파라미터, 나머지 파라미터로 유연한 함수 정의 가능</li>
+    <li>클로저: 함수가 선언 시점의 스코프를 기억함 (private 변수 구현에 활용)</li>
+    <li><code>this</code>는 호출 방식에 따라 달라짐 - <code>bind()</code>나 화살표 함수로 고정</li>
+    <li>고차 함수로 함수형 프로그래밍 패턴 구현 (map, filter, reduce 등)</li>
+  </ul>
+
+  <nav class="chapter-nav">
+    <a href="chapter2.html">← 2장. 변수와 타입</a>
+    <a href="chapter4.html">4장. 객체와 배열 →</a>
+  </nav>
+</main>

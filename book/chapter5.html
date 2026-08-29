@@ -1,0 +1,957 @@
+<title>5장 · 클래스와 모듈 — 자바 개발자를 위한 JavaScript 입문</title>
+<style>
+  :root {
+    --paper: #EEF0EA;
+    --paper-raised: #FAFAF6;
+    --paper-card: #F5F6F1;
+    --ink: #201F1B;
+    --ink-soft: #5C5A4E;
+    --ink-faint: #8B8878;
+    --accent: #D4A017;
+    --accent-soft: #FDF6E3;
+    --accent-ink: #8B6914;
+    --highlight: #2E7D32;
+    --highlight-soft: #E8F5E9;
+    --line: #DEDCD0;
+    --line-strong: #C7C4B4;
+    --mono-bg: #1C2229;
+    --mono-fg: #DCE3E8;
+    --mono-dim: #7C8894;
+    --shadow: 0 1px 2px rgba(32,31,27,0.05), 0 10px 28px rgba(32,31,27,0.06);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Apple Myungjo", AppleMyungjo, Batang, "Noto Serif KR", Georgia, serif;
+    font-size: 17.5px;
+    line-height: 1.92;
+  }
+  .measure { max-width: 700px; margin: 0 auto; padding: 0 28px; }
+  h1, h2, h3 { font-weight: 700; color: var(--ink); }
+  h2 { font-size: 1.5em; margin: 2.5em 0 0.8em; padding-bottom: 0.3em; border-bottom: 1px solid var(--line); }
+  h3 { font-size: 1.2em; margin: 2em 0 0.6em; }
+  p { margin: 0 0 1.15em; }
+  a { color: var(--accent-ink); }
+  ul, ol { margin: 0 0 1.15em; padding-left: 1.5em; }
+  li { margin-bottom: 0.4em; }
+
+  .mono, code, pre { font-family: ui-monospace, "SF Mono", "JetBrains Mono", Consolas, monospace; }
+  code:not(pre code) {
+    background: var(--accent-soft);
+    color: var(--accent-ink);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 0.86em;
+  }
+  pre {
+    background: var(--mono-bg);
+    color: var(--mono-fg);
+    padding: 20px 24px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 1.5em 0;
+  }
+  pre .comment { color: var(--mono-dim); }
+  pre .keyword { color: #C792EA; }
+  pre .string { color: #C3E88D; }
+  pre .number { color: #F78C6C; }
+
+  .masthead {
+    border-bottom: 1px solid var(--line);
+    padding: 22px 0;
+    font-family: -apple-system, "Apple SD Gothic Neo", sans-serif;
+  }
+  .masthead .row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+  .masthead .series { font-size: 12.5px; letter-spacing: 0.12em; color: var(--accent); font-weight: 600; }
+  .masthead nav a { font-size: 13px; color: var(--ink-soft); text-decoration: none; margin-left: 18px; }
+
+  .chapter-header {
+    padding: 72px 0 56px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 48px;
+  }
+  .chapter-header .num {
+    font-family: -apple-system, sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .chapter-header h1 { font-size: 2.2em; margin: 0 0 18px; }
+  .chapter-header .lead { font-size: 1.1em; color: var(--ink-soft); line-height: 1.75; }
+
+  .keypoint {
+    background: var(--accent-soft);
+    border-left: 4px solid var(--accent);
+    padding: 20px 24px;
+    margin: 1.5em 0;
+    border-radius: 0 8px 8px 0;
+  }
+  .keypoint strong {
+    display: block;
+    color: var(--accent-ink);
+    margin-bottom: 8px;
+    font-family: -apple-system, sans-serif;
+    font-size: 14px;
+  }
+
+  .warning {
+    background: #FFF3E0;
+    border-left: 4px solid #FF9800;
+    padding: 20px 24px;
+    margin: 1.5em 0;
+    border-radius: 0 8px 8px 0;
+  }
+  .warning strong {
+    display: block;
+    color: #E65100;
+    margin-bottom: 8px;
+    font-family: -apple-system, sans-serif;
+    font-size: 14px;
+  }
+
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 1.5em 0;
+  }
+  .compare h4 {
+    font-family: -apple-system, sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    margin: 0 0 8px;
+    padding: 8px 16px;
+    border-radius: 6px 6px 0 0;
+  }
+  .compare .java h4 { background: #E8EAF6; color: #3F51B5; }
+  .compare .js h4 { background: var(--accent-soft); color: var(--accent-ink); }
+  .compare pre { margin: 0; border-radius: 0 0 6px 6px; }
+  @media (max-width: 700px) { .compare { grid-template-columns: 1fr; } }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5em 0;
+    font-size: 15px;
+  }
+  th, td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--line);
+  }
+  th {
+    background: var(--paper-card);
+    font-family: -apple-system, sans-serif;
+    font-weight: 600;
+  }
+
+  .chapter-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 32px 0;
+    margin-top: 48px;
+    border-top: 1px solid var(--line);
+    font-family: -apple-system, sans-serif;
+    font-size: 14px;
+  }
+  .chapter-nav a { color: var(--accent-ink); text-decoration: none; }
+</style>
+
+<header class="masthead">
+  <div class="measure">
+    <div class="row">
+      <span class="series">자바 개발자를 위한 JAVASCRIPT 입문</span>
+      <nav>
+        <a href="index.html">목차</a>
+        <a href="chapter4.html">← 이전</a>
+        <a href="chapter6.html">다음 →</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main class="measure">
+  <div class="chapter-header">
+    <div class="num">CHAPTER 5</div>
+    <h1>클래스와 모듈</h1>
+    <p class="lead">ES6에서 도입된 클래스 문법은 Java 개발자에게 친숙합니다.
+    클래스 정의, 상속, 그리고 모듈 시스템을 학습합니다.</p>
+  </div>
+
+  <h2>ES6 클래스</h2>
+
+  <p>ES6 이전에는 함수와 프로토타입으로 "클래스"를 흉내냈습니다.
+  ES6부터는 Java와 비슷한 <code>class</code> 키워드를 사용할 수 있습니다.</p>
+
+  <div class="compare">
+    <div class="java">
+      <h4>JAVA</h4>
+      <pre>public class User {
+    private String name;
+    private int age;
+
+    public User(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    public String greet() {
+        return "안녕, " + this.name + "!";
+    }
+}</pre>
+    </div>
+    <div class="js">
+      <h4>JAVASCRIPT</h4>
+      <pre>class User {
+    constructor(name, age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    greet() {
+        return `안녕, ${this.name}!`;
+    }
+}
+
+const user = new User("홍길동", 30);
+user.greet();  // "안녕, 홍길동!"</pre>
+    </div>
+  </div>
+
+  <div class="keypoint">
+    <strong>클래스는 문법적 설탕</strong>
+    <p>JavaScript의 클래스는 내부적으로 여전히 프로토타입을 사용합니다.
+    Java의 클래스와 비슷해 보이지만, 동작 방식은 다릅니다.
+    특히 <code>this</code> 바인딩에 주의해야 합니다.</p>
+  </div>
+
+  <h3>클래스 표현식</h3>
+
+  <pre>// 클래스 선언문
+class User { }
+
+// 클래스 표현식 (이름 있음)
+const User = class UserClass { };
+
+// 클래스 표현식 (익명)
+const User = class { };
+
+// 함수처럼 변수에 할당 가능
+const createClass = () => class {
+    constructor(name) {
+        this.name = name;
+    }
+};</pre>
+
+  <h2>생성자와 프로퍼티</h2>
+
+  <h3>constructor</h3>
+
+  <pre>class User {
+    // 생성자 - 클래스당 하나만 가능
+    constructor(name, age) {
+        this.name = name;
+        this.age = age;
+    }
+}
+
+// Java처럼 오버로딩 불가
+// class User {
+//     constructor(name) { }
+//     constructor(name, age) { }  // SyntaxError
+// }
+
+// 대신 기본값으로 처리
+class User {
+    constructor(name, age = 0) {
+        this.name = name;
+        this.age = age;
+    }
+}</pre>
+
+  <h3>인스턴스 프로퍼티</h3>
+
+  <div class="compare">
+    <div class="java">
+      <h4>JAVA</h4>
+      <pre>public class User {
+    // 필드 선언
+    private String name;
+    private int age = 0;
+
+    public User(String name) {
+        this.name = name;
+    }
+}</pre>
+    </div>
+    <div class="js">
+      <h4>JAVASCRIPT</h4>
+      <pre>class User {
+    // 클래스 필드 (ES2022)
+    name;
+    age = 0;
+
+    constructor(name) {
+        this.name = name;
+    }
+}
+
+// 또는 constructor에서만 정의
+class User {
+    constructor(name) {
+        this.name = name;
+        this.age = 0;
+    }
+}</pre>
+    </div>
+  </div>
+
+  <h3>Private 필드 (#)</h3>
+
+  <p>ES2022부터 <code>#</code> 접두사로 진짜 private 필드를 만들 수 있습니다.</p>
+
+  <div class="compare">
+    <div class="java">
+      <h4>JAVA</h4>
+      <pre>public class BankAccount {
+    private double balance = 0;
+
+    public void deposit(double amount) {
+        this.balance += amount;
+    }
+
+    public double getBalance() {
+        return this.balance;
+    }
+}</pre>
+    </div>
+    <div class="js">
+      <h4>JAVASCRIPT</h4>
+      <pre>class BankAccount {
+    #balance = 0;  // private 필드
+
+    deposit(amount) {
+        this.#balance += amount;
+    }
+
+    getBalance() {
+        return this.#balance;
+    }
+}
+
+const account = new BankAccount();
+account.deposit(1000);
+account.getBalance();   // 1000
+// account.#balance;    // SyntaxError</pre>
+    </div>
+  </div>
+
+  <pre>// 관례적 private (실제로는 public)
+class User {
+    _password;  // 밑줄 접두사는 관례일 뿐, 접근 가능
+}
+
+// 진짜 private
+class User {
+    #password;  // 외부에서 절대 접근 불가
+
+    #validatePassword(input) {  // private 메서드
+        return input === this.#password;
+    }
+}</pre>
+
+  <h2>메서드</h2>
+
+  <h3>인스턴스 메서드</h3>
+
+  <pre>class Calculator {
+    constructor(value = 0) {
+        this.value = value;
+    }
+
+    add(n) {
+        this.value += n;
+        return this;  // 메서드 체이닝을 위해 this 반환
+    }
+
+    subtract(n) {
+        this.value -= n;
+        return this;
+    }
+
+    getResult() {
+        return this.value;
+    }
+}
+
+const calc = new Calculator(10);
+const result = calc.add(5).subtract(3).getResult();  // 12</pre>
+
+  <h3>정적 메서드 (static)</h3>
+
+  <div class="compare">
+    <div class="java">
+      <h4>JAVA</h4>
+      <pre>public class MathUtils {
+    public static int max(int a, int b) {
+        return a > b ? a : b;
+    }
+}
+
+MathUtils.max(10, 20);  // 20</pre>
+    </div>
+    <div class="js">
+      <h4>JAVASCRIPT</h4>
+      <pre>class MathUtils {
+    static max(a, b) {
+        return a > b ? a : b;
+    }
+
+    static PI = 3.14159;  // 정적 프로퍼티
+}
+
+MathUtils.max(10, 20);  // 20
+MathUtils.PI;           // 3.14159</pre>
+    </div>
+  </div>
+
+  <pre>// 정적 메서드 활용 예
+class User {
+    constructor(name, age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    // 팩토리 메서드
+    static fromJSON(json) {
+        const data = JSON.parse(json);
+        return new User(data.name, data.age);
+    }
+
+    // 유틸리티 메서드
+    static isAdult(user) {
+        return user.age >= 18;
+    }
+}
+
+const user = User.fromJSON('{"name":"홍길동","age":30}');
+User.isAdult(user);  // true</pre>
+
+  <h3>Getter와 Setter</h3>
+
+  <div class="compare">
+    <div class="java">
+      <h4>JAVA</h4>
+      <pre>public class Circle {
+    private double radius;
+
+    public double getRadius() {
+        return radius;
+    }
+
+    public void setRadius(double r) {
+        if (r < 0) throw new IllegalArgumentException();
+        this.radius = r;
+    }
+
+    public double getArea() {
+        return Math.PI * radius * radius;
+    }
+}</pre>
+    </div>
+    <div class="js">
+      <h4>JAVASCRIPT</h4>
+      <pre>class Circle {
+    #radius = 0;
+
+    get radius() {
+        return this.#radius;
+    }
+
+    set radius(value) {
+        if (value < 0) throw new Error("음수 불가");
+        this.#radius = value;
+    }
+
+    get area() {  // 읽기 전용
+        return Math.PI * this.#radius ** 2;
+    }
+}
+
+const c = new Circle();
+c.radius = 5;   // setter 호출
+c.radius;       // getter 호출 → 5
+c.area;         // getter 호출 → 78.54...</pre>
+    </div>
+  </div>
+
+  <h2>상속</h2>
+
+  <div class="compare">
+    <div class="java">
+      <h4>JAVA</h4>
+      <pre>public class Animal {
+    protected String name;
+
+    public Animal(String name) {
+        this.name = name;
+    }
+
+    public void speak() {
+        System.out.println(name + " makes a sound");
+    }
+}
+
+public class Dog extends Animal {
+    public Dog(String name) {
+        super(name);
+    }
+
+    @Override
+    public void speak() {
+        System.out.println(name + " barks");
+    }
+}</pre>
+    </div>
+    <div class="js">
+      <h4>JAVASCRIPT</h4>
+      <pre>class Animal {
+    constructor(name) {
+        this.name = name;
+    }
+
+    speak() {
+        console.log(`${this.name} makes a sound`);
+    }
+}
+
+class Dog extends Animal {
+    constructor(name) {
+        super(name);  // 반드시 첫 줄에서 호출
+    }
+
+    speak() {  // 메서드 오버라이딩
+        console.log(`${this.name} barks`);
+    }
+}
+
+const dog = new Dog("멍멍이");
+dog.speak();  // "멍멍이 barks"</pre>
+    </div>
+  </div>
+
+  <h3>super 키워드</h3>
+
+  <pre>class Animal {
+    constructor(name) {
+        this.name = name;
+    }
+
+    speak() {
+        return `${this.name} makes a sound`;
+    }
+}
+
+class Dog extends Animal {
+    constructor(name, breed) {
+        // 자식 클래스에서 this 사용 전에 super() 필수
+        super(name);
+        this.breed = breed;
+    }
+
+    speak() {
+        // 부모 메서드 호출
+        const parentResult = super.speak();
+        return `${parentResult}. Actually, ${this.name} barks!`;
+    }
+
+    getInfo() {
+        return `${this.name} is a ${this.breed}`;
+    }
+}
+
+const dog = new Dog("멍멍이", "진돗개");
+dog.speak();    // "멍멍이 makes a sound. Actually, 멍멍이 barks!"
+dog.getInfo();  // "멍멍이 is a 진돗개"</pre>
+
+  <div class="warning">
+    <strong>super() 호출 규칙</strong>
+    <p>자식 클래스의 constructor에서 <code>this</code>를 사용하기 전에 반드시 <code>super()</code>를 호출해야 합니다.
+    호출하지 않으면 ReferenceError가 발생합니다.</p>
+  </div>
+
+  <h3>instanceof 연산자</h3>
+
+  <pre>class Animal { }
+class Dog extends Animal { }
+class Cat extends Animal { }
+
+const dog = new Dog();
+
+dog instanceof Dog;     // true
+dog instanceof Animal;  // true
+dog instanceof Cat;     // false
+dog instanceof Object;  // true (모든 객체는 Object의 인스턴스)</pre>
+
+  <h2>Java 클래스와의 차이점</h2>
+
+  <table>
+    <tr>
+      <th>기능</th>
+      <th>Java</th>
+      <th>JavaScript</th>
+    </tr>
+    <tr>
+      <td>인터페이스</td>
+      <td>interface 키워드</td>
+      <td>없음 (TypeScript에서 지원)</td>
+    </tr>
+    <tr>
+      <td>추상 클래스</td>
+      <td>abstract 키워드</td>
+      <td>없음 (직접 구현)</td>
+    </tr>
+    <tr>
+      <td>접근 제어자</td>
+      <td>public, private, protected</td>
+      <td># (private만, ES2022)</td>
+    </tr>
+    <tr>
+      <td>다중 상속</td>
+      <td>인터페이스로 가능</td>
+      <td>없음 (Mixin 패턴 사용)</td>
+    </tr>
+    <tr>
+      <td>오버로딩</td>
+      <td>지원</td>
+      <td>없음 (기본값/rest 파라미터)</td>
+    </tr>
+    <tr>
+      <td>final 클래스</td>
+      <td>final 키워드</td>
+      <td>없음</td>
+    </tr>
+  </table>
+
+  <h3>추상 클래스 흉내내기</h3>
+
+  <pre>class Shape {
+    constructor() {
+        if (new.target === Shape) {
+            throw new Error("Shape은 직접 인스턴스화할 수 없습니다");
+        }
+    }
+
+    // 추상 메서드 (자식에서 구현 필수)
+    getArea() {
+        throw new Error("getArea()를 구현해야 합니다");
+    }
+}
+
+class Circle extends Shape {
+    constructor(radius) {
+        super();
+        this.radius = radius;
+    }
+
+    getArea() {
+        return Math.PI * this.radius ** 2;
+    }
+}
+
+// new Shape();  // Error: Shape은 직접 인스턴스화할 수 없습니다
+new Circle(5).getArea();  // 78.54...</pre>
+
+  <h2>모듈 시스템</h2>
+
+  <p>ES6 이전에는 JavaScript에 공식 모듈 시스템이 없었습니다.
+  CommonJS(Node.js), AMD 등 여러 방식이 사용되었습니다.
+  ES6부터 표준 모듈 시스템이 도입되었습니다.</p>
+
+  <h3>export - 내보내기</h3>
+
+  <pre>// math.js
+
+// 개별 내보내기 (Named Export)
+export const PI = 3.14159;
+
+export function add(a, b) {
+    return a + b;
+}
+
+export class Calculator {
+    // ...
+}
+
+// 한 번에 내보내기
+const subtract = (a, b) => a - b;
+const multiply = (a, b) => a * b;
+
+export { subtract, multiply };
+
+// 이름 바꿔서 내보내기
+export { subtract as minus };</pre>
+
+  <h3>export default - 기본 내보내기</h3>
+
+  <pre>// User.js
+
+// 기본 내보내기 (모듈당 하나만)
+export default class User {
+    constructor(name) {
+        this.name = name;
+    }
+}
+
+// 또는
+class User { }
+export default User;
+
+// 함수도 가능
+export default function(name) {
+    return { name };
+}</pre>
+
+  <h3>import - 가져오기</h3>
+
+  <div class="compare">
+    <div class="java">
+      <h4>JAVA</h4>
+      <pre>// 개별 import
+import java.util.List;
+import java.util.ArrayList;
+
+// 패키지 전체
+import java.util.*;
+
+// 정적 import
+import static java.lang.Math.PI;</pre>
+    </div>
+    <div class="js">
+      <h4>JAVASCRIPT</h4>
+      <pre>// Named import
+import { add, subtract } from './math.js';
+
+// 이름 바꿔서 import
+import { add as plus } from './math.js';
+
+// 전체 import
+import * as math from './math.js';
+math.add(1, 2);
+
+// Default import
+import User from './User.js';
+
+// 혼합
+import User, { add } from './module.js';</pre>
+    </div>
+  </div>
+
+  <pre>// 다양한 import 패턴
+
+// Named exports 가져오기
+import { PI, add, Calculator } from './math.js';
+
+// 이름 변경
+import { add as sum } from './math.js';
+
+// 모든 Named exports를 네임스페이스로
+import * as MathUtils from './math.js';
+MathUtils.PI;
+MathUtils.add(1, 2);
+
+// Default export 가져오기
+import User from './User.js';
+
+// Default와 Named 함께
+import User, { add, subtract } from './module.js';
+
+// 부작용만 실행 (값을 가져오지 않음)
+import './init.js';</pre>
+
+  <h3>re-export</h3>
+
+  <pre>// index.js - 여러 모듈을 하나로 모아서 re-export
+
+export { add, subtract } from './math.js';
+export { default as User } from './User.js';
+export * from './utils.js';
+
+// 사용하는 쪽
+import { add, User } from './index.js';</pre>
+
+  <h3>동적 import</h3>
+
+  <pre>// 조건부 로딩
+if (condition) {
+    const module = await import('./heavy-module.js');
+    module.doSomething();
+}
+
+// 버튼 클릭 시 로딩
+button.addEventListener('click', async () => {
+    const { showModal } = await import('./modal.js');
+    showModal();
+});
+
+// 경로 동적 생성
+const lang = 'ko';
+const messages = await import(`./locales/${lang}.js`);</pre>
+
+  <h2>모듈 사용하기</h2>
+
+  <h3>브라우저에서</h3>
+
+  <pre>&lt;!-- type="module" 필수 --&gt;
+&lt;script type="module"&gt;
+    import { add } from './math.js';
+    console.log(add(1, 2));
+&lt;/script&gt;
+
+&lt;!-- 외부 파일 --&gt;
+&lt;script type="module" src="./main.js"&gt;&lt;/script&gt;
+
+&lt;!-- 모듈 미지원 브라우저용 폴백 --&gt;
+&lt;script nomodule src="./fallback.js"&gt;&lt;/script&gt;</pre>
+
+  <h3>Node.js에서</h3>
+
+  <pre>// package.json에서 타입 지정
+{
+    "type": "module"
+}
+
+// 또는 파일 확장자를 .mjs 사용
+// math.mjs, main.mjs
+
+// ES 모듈 사용
+import { add } from './math.js';
+
+// CommonJS와 혼용
+import pkg from './commonjs-module.cjs';
+
+// Node.js 내장 모듈
+import fs from 'fs';
+import { readFile } from 'fs/promises';</pre>
+
+  <h3>CommonJS vs ES Modules</h3>
+
+  <table>
+    <tr>
+      <th>특성</th>
+      <th>CommonJS</th>
+      <th>ES Modules</th>
+    </tr>
+    <tr>
+      <td>문법</td>
+      <td>require(), module.exports</td>
+      <td>import, export</td>
+    </tr>
+    <tr>
+      <td>로딩</td>
+      <td>동기 (런타임)</td>
+      <td>비동기 (정적 분석)</td>
+    </tr>
+    <tr>
+      <td>환경</td>
+      <td>Node.js 기본</td>
+      <td>브라우저, Node.js</td>
+    </tr>
+    <tr>
+      <td>트리 쉐이킹</td>
+      <td>어려움</td>
+      <td>지원</td>
+    </tr>
+    <tr>
+      <td>Top-level await</td>
+      <td>불가</td>
+      <td>가능</td>
+    </tr>
+  </table>
+
+  <pre>// CommonJS (레거시, Node.js)
+const math = require('./math');
+module.exports = { add, subtract };
+
+// ES Modules (현대적, 권장)
+import { add } from './math.js';
+export { add, subtract };</pre>
+
+  <div class="keypoint">
+    <strong>ES Modules 권장</strong>
+    <p>새로운 프로젝트에서는 ES Modules를 사용하세요.
+    정적 분석이 가능해서 번들러가 사용하지 않는 코드를 제거(tree-shaking)할 수 있습니다.
+    브라우저에서도 네이티브로 지원됩니다.</p>
+  </div>
+
+  <h2>실전 패턴</h2>
+
+  <h3>모듈 구조 예시</h3>
+
+  <pre>src/
+├── index.js          # 진입점
+├── models/
+│   ├── index.js      # re-export
+│   ├── User.js
+│   └── Product.js
+├── services/
+│   ├── index.js
+│   ├── api.js
+│   └── auth.js
+└── utils/
+    ├── index.js
+    └── helpers.js
+
+// models/index.js
+export { default as User } from './User.js';
+export { default as Product } from './Product.js';
+
+// 사용
+import { User, Product } from './models/index.js';
+// 또는
+import { User, Product } from './models';  // 번들러가 index.js 자동 찾음</pre>
+
+  <h3>싱글톤 패턴</h3>
+
+  <pre>// config.js
+class Config {
+    constructor() {
+        this.apiUrl = 'https://api.example.com';
+        this.timeout = 5000;
+    }
+}
+
+// ES 모듈은 기본적으로 싱글톤
+// 같은 모듈을 여러 번 import해도 같은 인스턴스
+export default new Config();
+
+// 사용
+import config from './config.js';
+console.log(config.apiUrl);</pre>
+
+  <h2>정리</h2>
+
+  <ul>
+    <li>ES6 클래스: <code>class</code>, <code>constructor</code>, <code>extends</code>, <code>super</code></li>
+    <li>Private 필드: <code>#</code> 접두사 (ES2022)</li>
+    <li>정적 멤버: <code>static</code> 키워드</li>
+    <li>Getter/Setter: <code>get</code>, <code>set</code> 키워드</li>
+    <li>클래스는 프로토타입의 문법적 설탕</li>
+    <li>Named export: <code>export { name }</code></li>
+    <li>Default export: <code>export default</code> (모듈당 하나)</li>
+    <li>Import: <code>import { name } from './module.js'</code></li>
+    <li>동적 import: <code>await import('./module.js')</code></li>
+    <li>ES Modules를 기본으로 사용 (CommonJS는 레거시)</li>
+  </ul>
+
+  <nav class="chapter-nav">
+    <a href="chapter4.html">← 4장. 객체와 배열</a>
+    <a href="chapter6.html">6장. 비동기 프로그래밍 →</a>
+  </nav>
+</main>
