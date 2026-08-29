@@ -26,6 +26,11 @@ except ImportError:
 # 설정
 BOOK_DIR = Path(__file__).parent.parent
 OUTPUT_PDF = BOOK_DIR / "javascript-book.pdf"
+
+# 앞부분 (제목, 판권, 목차)
+FRONTMATTER = "frontmatter.html"
+
+# 본문 챕터
 CHAPTERS = [
     "chapter0.html",
     "chapter1.html",
@@ -167,12 +172,30 @@ def extract_styles(html_path: Path) -> str:
     return "\n".join(styles)
 
 
+def extract_full_content(html_path: Path) -> str:
+    """HTML 파일에서 body 전체 내용 추출 (frontmatter용)"""
+    content = html_path.read_text(encoding="utf-8")
+    import re
+    body_match = re.search(r'<body[^>]*>(.*?)</body>', content, re.DOTALL)
+    if body_match:
+        return body_match.group(1)
+    return content
+
+
 def create_combined_html() -> str:
     """모든 챕터를 하나의 HTML로 합침"""
 
     # 첫 번째 챕터의 스타일 사용
     first_chapter = BOOK_DIR / CHAPTERS[0]
     base_styles = extract_styles(first_chapter)
+
+    # frontmatter 스타일 추가
+    frontmatter_path = BOOK_DIR / FRONTMATTER
+    frontmatter_styles = ""
+    frontmatter_html = ""
+    if frontmatter_path.exists():
+        frontmatter_styles = extract_styles(frontmatter_path)
+        frontmatter_html = extract_full_content(frontmatter_path)
 
     # 각 챕터 내용 수집
     chapters_html = []
@@ -198,9 +221,11 @@ def create_combined_html() -> str:
     <title>자바 개발자를 위한 JavaScript 입문</title>
     {FONT_FACES}
     <style>{base_styles}</style>
+    <style>{frontmatter_styles}</style>
     {COMBINED_CSS}
 </head>
 <body>
+    {frontmatter_html}
     {"".join(chapters_html)}
 </body>
 </html>
