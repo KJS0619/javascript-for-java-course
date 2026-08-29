@@ -232,10 +232,9 @@ async def generate_pdf():
         # 로컬 파일 로드
         await page.goto(f"file:///{tmp_html.resolve()}")
 
-        # PDF 생성
+        # PDF 생성 (46배판: 188mm x 263mm)
         await page.pdf(
             path=str(OUTPUT_PDF),
-            format="A4",  # Playwright는 커스텀 사이즈 지원
             width=f"{PAGE_WIDTH}mm",
             height=f"{PAGE_HEIGHT}mm",
             margin={
@@ -245,7 +244,8 @@ async def generate_pdf():
                 "left": "15mm"
             },
             print_background=True,
-            display_header_footer=False
+            display_header_footer=False,
+            prefer_css_page_size=True
         )
 
         await browser.close()

@@ -1,14 +1,21 @@
 <!doctype html>
 <html><head><meta charset="utf-8">
+<!--
+  부크크 46배판 풀커버 규격
+  - 본문 크기: 188mm × 263mm
+  - 도련(재단여백): 3mm
+  - 책등 두께: 213페이지 × 0.0534mm = 11.37mm
+  - 풀커버: (191 + 11.37 + 191) × 269 = 393.37mm × 269mm
+-->
 <style>
-  @page { size: 381.83mm 263mm; margin: 0; }
+  @page { size: 393.37mm 269mm; margin: 0; }
   @font-face { font-family: "BookkMyungjo"; src: url("fonts/BookkMyungjo_Light.ttf") format("truetype"); font-weight: 400; }
   @font-face { font-family: "BookkMyungjo"; src: url("fonts/BookkMyungjo_Bold.ttf") format("truetype"); font-weight: 700; }
   @font-face { font-family: "BookkGothic"; src: url("fonts/BookkGothic_Light.ttf") format("truetype"); font-weight: 400; }
   @font-face { font-family: "BookkGothic"; src: url("fonts/BookkGothic_Bold.ttf") format("truetype"); font-weight: 700; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    width: 381.83mm; height: 263mm;
+    width: 393.37mm; height: 269mm;
     font-family: "BookkMyungjo", serif;
     background: #FDF6E3;
     position: relative;
@@ -29,13 +36,14 @@
 
   .bg {
     position: absolute; inset: 0;
-    background: radial-gradient(1200px 700px at 197.83mm 40mm, var(--accent-soft), transparent 60%), var(--paper);
+    background: radial-gradient(1200px 700px at 208.37mm 40mm, var(--accent-soft), transparent 60%), var(--paper);
   }
 
   /* ===== 뒷표지 ===== */
+  /* 191mm 너비 (3mm 도련 포함) */
   .back {
-    position: absolute; left: 0; top: 0; width: 185mm; height: 263mm;
-    padding: 26mm 25mm 22mm 28mm;
+    position: absolute; left: 0; top: 0; width: 191mm; height: 269mm;
+    padding: 29mm 25mm 25mm 31mm; /* 도련 3mm 고려 */
     display: flex; flex-direction: column;
   }
   .back .eyebrow {
@@ -61,10 +69,11 @@
   .back .barcode-zone { height: 30mm; }
 
   /* ===== 책등 ===== */
+  /* 11.37mm 너비 (213페이지 × 0.0534mm) */
   .spine {
-    position: absolute; left: 185mm; top: 0; width: 11.83mm; height: 263mm;
+    position: absolute; left: 191mm; top: 0; width: 11.37mm; height: 269mm;
     display: flex; align-items: flex-start; justify-content: center;
-    padding-top: 20mm;
+    padding-top: 23mm; /* 도련 3mm 고려 */
   }
   .spine .spine-text {
     writing-mode: vertical-rl;
@@ -81,10 +90,11 @@
   }
 
   /* ===== 앞표지 ===== */
+  /* 191mm 너비 (3mm 도련 포함), 시작 위치: 191 + 11.37 = 202.37mm */
   .front {
-    position: absolute; left: 196.83mm; top: 0; width: 185mm; height: 263mm;
+    position: absolute; left: 202.37mm; top: 0; width: 191mm; height: 269mm;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    text-align: center; padding: 0 22mm;
+    text-align: center; padding: 3mm 25mm 3mm 22mm; /* 도련 고려 */
   }
   .front .kicker {
     font-family: "BookkGothic", sans-serif;
