@@ -156,7 +156,19 @@ javascript-for-java-course/
 - 9장 실전 프로젝트 작성 완료
 - 전체 본문 작성 완료 (0장~9장)
 
-### 다음 세션 작업
-- PDF 생성 스크립트 설정
+### 2026-08-30 PDF 및 출판 준비
+- PDF 생성 스크립트 작성 (build.py, build_cover.py)
+- Playwright 기반 HTML→PDF 변환
+- 부크크 46배판 규격 (188mm × 263mm) 적용
+- 표지 PDF 생성 (풀커버 393.37mm × 269mm)
+- frontmatter 추가 (제목, 판권, 목차 페이지)
+  - 저자: 김아람
+  - 출판일: 2026년 9월 15일
 - GitHub 저장소 생성 및 푸시
-- 최종 교정 및 출판 준비
+  - https://github.com/KJS0619/javascript-for-java-course
+
+### 부크크 출판 정보
+- 판형: 46배판 (188mm × 263mm)
+- 도련: 3mm
+- 책등 두께: 페이지수 × 0.0534mm (80g 용지)
+- PDF 파일: book/javascript-book.pdf, book/cover/cover.pdf
