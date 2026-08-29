@@ -1,0 +1,152 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+  @page { size: 381.83mm 263mm; margin: 0; }
+  @font-face { font-family: "BookkMyungjo"; src: url("fonts/BookkMyungjo_Light.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "BookkMyungjo"; src: url("fonts/BookkMyungjo_Bold.ttf") format("truetype"); font-weight: 700; }
+  @font-face { font-family: "BookkGothic"; src: url("fonts/BookkGothic_Light.ttf") format("truetype"); font-weight: 400; }
+  @font-face { font-family: "BookkGothic"; src: url("fonts/BookkGothic_Bold.ttf") format("truetype"); font-weight: 700; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 381.83mm; height: 263mm;
+    font-family: "BookkMyungjo", serif;
+    background: #FDF6E3;
+    position: relative;
+    overflow: hidden;
+  }
+  :root {
+    --paper: #FDF6E3;
+    --paper-raised: #FFFCF5;
+    --ink: #201F1B;
+    --ink-soft: #5C5A4E;
+    --ink-faint: #8B8878;
+    --accent: #D4A017;
+    --accent-soft: #FFF3C4;
+    --accent-ink: #8B6914;
+    --line: #E8E0C8;
+    --line-strong: #D4C9A8;
+  }
+
+  .bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(1200px 700px at 197.83mm 40mm, var(--accent-soft), transparent 60%), var(--paper);
+  }
+
+  /* ===== 뒷표지 ===== */
+  .back {
+    position: absolute; left: 0; top: 0; width: 185mm; height: 263mm;
+    padding: 26mm 25mm 22mm 28mm;
+    display: flex; flex-direction: column;
+  }
+  .back .eyebrow {
+    font-family: "BookkGothic", sans-serif;
+    font-size: 9pt; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--accent-ink); margin-bottom: 8mm;
+  }
+  .back .blurb {
+    font-size: 12pt; line-height: 1.8; color: var(--ink);
+  }
+  .back .blurb b { color: var(--accent-ink); }
+  .back .rule { width: 14mm; height: 0.5mm; background: var(--accent); margin: 7mm 0; }
+  .back .chapters {
+    font-family: "BookkGothic", sans-serif;
+    font-size: 8.3pt; color: var(--ink-soft); line-height: 1.75;
+  }
+  .back .chapters .cn { color: var(--accent-ink); font-weight: 700; margin-right: 3mm; font-family: ui-monospace, monospace; }
+  .back .spacer { flex: 1; }
+  .back .quote {
+    font-size: 11pt; line-height: 1.7; color: var(--ink-soft); font-style: italic;
+    border-left: 0.6mm solid var(--accent); padding-left: 6mm;
+  }
+  .back .barcode-zone { height: 30mm; }
+
+  /* ===== 책등 ===== */
+  .spine {
+    position: absolute; left: 185mm; top: 0; width: 11.83mm; height: 263mm;
+    display: flex; align-items: flex-start; justify-content: center;
+    padding-top: 20mm;
+  }
+  .spine .spine-text {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    font-size: 9pt;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    display: flex; align-items: center; gap: 7mm;
+    white-space: nowrap;
+  }
+  .spine .spine-text .t { font-weight: 700; }
+  .spine .spine-text .a {
+    font-family: "BookkGothic", sans-serif; font-size: 8pt; color: var(--ink-faint);
+  }
+
+  /* ===== 앞표지 ===== */
+  .front {
+    position: absolute; left: 196.83mm; top: 0; width: 185mm; height: 263mm;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 0 22mm;
+  }
+  .front .kicker {
+    font-family: "BookkGothic", sans-serif;
+    font-size: 12pt; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--accent-ink); margin-bottom: 12mm;
+  }
+  .front h1 { font-size: 32pt; line-height: 1.3; color: var(--ink); margin-bottom: 10mm; }
+  .front .sub {
+    font-size: 12.5pt; line-height: 1.85; color: var(--ink-soft);
+    max-width: 102mm; margin: 0 auto 14mm;
+  }
+  .front .rule { width: 16mm; height: 0.5mm; background: var(--accent); margin: 0 auto 14mm; }
+  .front .author {
+    font-family: "BookkGothic", sans-serif; font-size: 11pt; color: var(--ink-soft);
+  }
+  .front .bookk-badge {
+    position: absolute; bottom: 12mm; left: 0; right: 0;
+    text-align: center; font-family: "BookkGothic", sans-serif;
+    font-size: 8pt; color: var(--ink-faint); letter-spacing: 0.08em;
+  }
+</style></head>
+<body>
+  <div class="bg"></div>
+
+  <div class="back">
+    <div class="eyebrow">자바 개발자를 위한 JavaScript 입문</div>
+    <div class="blurb">
+      Java의 눈으로 JavaScript를 읽습니다. <b>정적 타입에서 동적 타입으로</b>,
+      클래스에서 프로토타입으로, 스레드에서 이벤트 루프로 — 이미 알고 있는 것에서
+      출발해 새로운 언어를 빠르게 익힙니다.
+    </div>
+    <div class="rule"></div>
+    <div class="chapters">
+      <div><span class="cn">0장</span>오리엔테이션</div>
+      <div><span class="cn">1장</span>JavaScript 첫걸음</div>
+      <div><span class="cn">2장</span>변수와 타입</div>
+      <div><span class="cn">3장</span>함수의 모든 것</div>
+      <div><span class="cn">4장</span>객체와 배열</div>
+      <div><span class="cn">5장</span>클래스와 모듈</div>
+      <div><span class="cn">6장</span>비동기 프로그래밍</div>
+      <div><span class="cn">7장</span>DOM과 이벤트</div>
+      <div><span class="cn">8장</span>모던 JavaScript 생태계</div>
+      <div><span class="cn">9장</span>실전 프로젝트</div>
+    </div>
+    <div class="spacer"></div>
+    <div class="quote">"문법은 새로 배워도, 프로그래밍의 본질은 같습니다.<br>Java로 다져온 설계 감각이 JavaScript에서도 빛납니다."</div>
+    <div class="barcode-zone"></div>
+  </div>
+
+  <div class="spine">
+    <div class="spine-text">
+      <span class="t">자바 개발자를 위한 JavaScript 입문</span>
+      <span class="a">김아람</span>
+    </div>
+  </div>
+
+  <div class="front">
+    <div class="kicker">자바 개발자를 위한</div>
+    <h1>JavaScript 입문</h1>
+    <p class="sub">Java의 눈으로 JavaScript를 읽습니다 — 정적 타입에서 동적 타입으로,
+    클래스에서 프로토타입으로, 이미 알고 있는 것에서 출발하는 10장짜리 입문서.</p>
+    <div class="rule"></div>
+    <div class="author">김아람</div>
+  </div>
+</body></html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>자바 개발자를 위한 JavaScript 입문</title>
+  <style>
+    :root {
+      --paper: #EEF0EA;
+      --ink: #201F1B;
+      --ink-soft: #5C5A4E;
+      --accent: #D4A017;
+      --accent-soft: #FDF6E3;
+      --line: #DEDCD0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.7;
+    }
+    .container { max-width: 720px; margin: 0 auto; padding: 60px 24px; }
+    header { text-align: center; margin-bottom: 48px; }
+    .kicker {
+      font-size: 14px;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    h1 { font-size: 32px; margin-bottom: 16px; }
+    .sub { color: var(--ink-soft); font-size: 16px; }
+    .toc { list-style: none; }
+    .toc li {
+      border-bottom: 1px solid var(--line);
+      padding: 16px 0;
+    }
+    .toc a {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      text-decoration: none;
+      color: var(--ink);
+    }
+    .toc a:hover { color: var(--accent); }
+    .toc .chapter-num {
+      font-weight: 700;
+      color: var(--accent);
+      margin-right: 12px;
+    }
+    .toc .chapter-title { flex: 1; }
+    footer {
+      margin-top: 48px;
+      text-align: center;
+      font-size: 14px;
+      color: var(--ink-soft);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="kicker">자바 개발자를 위한</div>
+      <h1>JavaScript 입문</h1>
+      <p class="sub">Java 백엔드 개발자가 JavaScript를 빠르게 익히기 위한 실전 안내서</p>
+    </header>
+
+    <nav>
+      <ul class="toc">
+        <li>
+          <a href="chapter0.html">
+            <span class="chapter-num">0장</span>
+            <span class="chapter-title">오리엔테이션</span>
+          </a>
+        </li>
+        <li>
+          <a href="chapter1.html">
+            <span class="chapter-num">1장</span>
+            <span class="chapter-title">JavaScript 첫걸음</span>
+          </a>
+        </li>
+        <li>
+          <a href="chapter2.html">
+            <span class="chapter-num">2장</span>
+            <span class="chapter-title">변수와 타입</span>
+          </a>
+        </li>
+        <li>
+          <a href="chapter3.html">
+            <span class="chapter-num">3장</span>
+            <span class="chapter-title">함수의 모든 것</span>
+          </a>
+        </li>
+        <li>
+          <a href="chapter4.html">
+            <span class="chapter-num">4장</span>
+            <span class="chapter-title">객체와 배열</span>
+          </a>
+        </li>
+        <li>
+          <a href="chapter5.html">
+            <span class="chapter-num">5장</span>
+            <span class="chapter-title">클래스와 모듈</span>
+          </a>
+        </li>
+        <li>
+          <a href="chapter6.html">
+            <span class="chapter-num">6장</span>
+            <span class="chapter-title">비동기 프로그래밍</span>
+          </a>
+        </li>
+        <li>
+          <a href="chapter7.html">
+            <span class="chapter-num">7장</span>
+            <span class="chapter-title">DOM과 이벤트</span>
+          </a>
+        </li>
+        <li>
+          <a href="chapter8.html">
+            <span class="chapter-num">8장</span>
+            <span class="chapter-title">모던 JavaScript 생태계</span>
+          </a>
+        </li>
+        <li>
+          <a href="chapter9.html">
+            <span class="chapter-num">9장</span>
+            <span class="chapter-title">실전 프로젝트</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <footer>
+      <p>© 2026 김아람 · 부크크 출판</p>
+    </footer>
+  </div>
+</body>
+</html>

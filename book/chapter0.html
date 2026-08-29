@@ -1,0 +1,402 @@
+<title>0장 · 오리엔테이션 — 자바 개발자를 위한 JavaScript 입문</title>
+<style>
+  :root {
+    --paper: #EEF0EA;
+    --paper-raised: #FAFAF6;
+    --paper-card: #F5F6F1;
+    --ink: #201F1B;
+    --ink-soft: #5C5A4E;
+    --ink-faint: #8B8878;
+    --accent: #D4A017;
+    --accent-soft: #FDF6E3;
+    --accent-ink: #8B6914;
+    --highlight: #2E7D32;
+    --highlight-soft: #E8F5E9;
+    --line: #DEDCD0;
+    --line-strong: #C7C4B4;
+    --mono-bg: #1C2229;
+    --mono-fg: #DCE3E8;
+    --mono-dim: #7C8894;
+    --shadow: 0 1px 2px rgba(32,31,27,0.05), 0 10px 28px rgba(32,31,27,0.06);
+  }
+  :root[data-theme="dark"] {
+    --paper: #1B1C18;
+    --paper-raised: #232420;
+    --paper-card: #262722;
+    --ink: #E9E6DA;
+    --ink-soft: #B3AF9E;
+    --ink-faint: #837F6F;
+    --accent: #F0C040;
+    --accent-soft: #3A3520;
+    --accent-ink: #F0C040;
+    --highlight: #81C784;
+    --highlight-soft: #1B3D1C;
+    --line: #35362F;
+    --line-strong: #46473D;
+    --mono-bg: #14181B;
+    --mono-fg: #D6DEE3;
+    --mono-dim: #6F7B85;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 10px 32px rgba(0,0,0,0.4);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Apple Myungjo", AppleMyungjo, Batang, "Noto Serif KR", Georgia, serif;
+    font-size: 17.5px;
+    line-height: 1.92;
+    -webkit-font-smoothing: antialiased;
+  }
+  .measure { max-width: 700px; margin: 0 auto; padding: 0 28px; }
+
+  h1, h2, h3, h4 { text-wrap: balance; font-weight: 700; color: var(--ink); }
+  h2 { font-size: 1.5em; margin: 2.5em 0 0.8em; padding-bottom: 0.3em; border-bottom: 1px solid var(--line); }
+  h3 { font-size: 1.2em; margin: 2em 0 0.6em; }
+  p { margin: 0 0 1.15em; }
+  a { color: var(--accent-ink); }
+
+  .mono, code, pre, kbd {
+    font-family: ui-monospace, "SF Mono", "JetBrains Mono", Consolas, monospace;
+  }
+  code:not(pre code) {
+    background: var(--accent-soft);
+    color: var(--accent-ink);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 0.86em;
+  }
+  pre {
+    background: var(--mono-bg);
+    color: var(--mono-fg);
+    padding: 20px 24px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 1.5em 0;
+  }
+
+  /* Masthead */
+  .masthead {
+    border-bottom: 1px solid var(--line);
+    padding: 22px 0;
+    font-family: -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  }
+  .masthead .row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+  .masthead .series { font-size: 12.5px; letter-spacing: 0.12em; color: var(--accent); font-weight: 600; }
+  .masthead nav a { font-size: 13px; color: var(--ink-soft); text-decoration: none; margin-left: 18px; }
+  .masthead nav a:hover { color: var(--accent); }
+
+  /* Chapter header */
+  .chapter-header {
+    padding: 72px 0 56px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 48px;
+  }
+  .chapter-header .num {
+    font-family: -apple-system, sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .chapter-header h1 { font-size: 2.2em; margin: 0 0 18px; }
+  .chapter-header .lead { font-size: 1.1em; color: var(--ink-soft); line-height: 1.75; }
+
+  /* Keypoint box */
+  .keypoint {
+    background: var(--accent-soft);
+    border-left: 4px solid var(--accent);
+    padding: 20px 24px;
+    margin: 1.5em 0;
+    border-radius: 0 8px 8px 0;
+  }
+  .keypoint strong {
+    display: block;
+    color: var(--accent-ink);
+    margin-bottom: 8px;
+    font-family: -apple-system, sans-serif;
+    font-size: 14px;
+  }
+
+  /* Compare box */
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 1.5em 0;
+  }
+  .compare > div { }
+  .compare h4 {
+    font-family: -apple-system, sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    margin: 0 0 8px;
+    padding: 8px 16px;
+    border-radius: 6px 6px 0 0;
+  }
+  .compare .java h4 { background: #E8EAF6; color: #3F51B5; }
+  .compare .js h4 { background: var(--accent-soft); color: var(--accent-ink); }
+  .compare pre { margin: 0; border-radius: 0 0 6px 6px; }
+
+  @media (max-width: 700px) {
+    .compare { grid-template-columns: 1fr; }
+  }
+
+  /* Footer nav */
+  .chapter-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 32px 0;
+    margin-top: 48px;
+    border-top: 1px solid var(--line);
+    font-family: -apple-system, sans-serif;
+    font-size: 14px;
+  }
+  .chapter-nav a { color: var(--accent-ink); text-decoration: none; }
+  .chapter-nav a:hover { text-decoration: underline; }
+</style>
+
+<header class="masthead">
+  <div class="measure">
+    <div class="row">
+      <span class="series">자바 개발자를 위한 JAVASCRIPT 입문</span>
+      <nav>
+        <a href="index.html">목차</a>
+        <a href="chapter1.html">다음 장 →</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main class="measure">
+  <div class="chapter-header">
+    <div class="num">CHAPTER 0</div>
+    <h1>오리엔테이션</h1>
+    <p class="lead">이 책의 대상과 목표, Java 개발자가 JavaScript를 배울 때 알아야 할 핵심 차이점,
+    그리고 학습 환경을 설정합니다.</p>
+  </div>
+
+  <h2>이 책의 대상</h2>
+
+  <p>이 책은 <strong>Java 백엔드 개발자</strong>를 위해 쓰였습니다. Spring Boot로 REST API를 만들어 본 경험이 있고,
+  이제 프론트엔드 영역을 이해하거나 직접 개발하고 싶은 분들을 대상으로 합니다.</p>
+
+  <p>다음과 같은 분들에게 이 책이 도움이 됩니다:</p>
+
+  <ul>
+    <li>JavaScript를 처음 배우는 Java 개발자</li>
+    <li>JavaScript를 사용해봤지만 체계적으로 정리하고 싶은 분</li>
+    <li>React, Vue, Angular를 배우기 전 기초를 다지고 싶은 분</li>
+    <li>Node.js 백엔드를 시작하려는 분</li>
+    <li>풀스택 개발자로 성장하고 싶은 분</li>
+  </ul>
+
+  <h2>왜 Java 개발자 관점인가?</h2>
+
+  <p>JavaScript 입문서는 많습니다. 그러나 대부분 프로그래밍을 처음 배우는 사람을 대상으로 합니다.
+  변수가 무엇인지, 반복문이 무엇인지부터 설명합니다.</p>
+
+  <p>Java 개발자는 이미 프로그래밍의 기본 개념을 알고 있습니다. 필요한 것은
+  <strong>"Java와 무엇이 다른가"</strong>입니다.</p>
+
+  <div class="keypoint">
+    <strong>Java 개발자 포인트</strong>
+    <p>이 책은 Java 문법 및 개념과 비교하며 JavaScript를 설명합니다.
+    이미 알고 있는 지식을 활용해 새로운 언어를 빠르게 익힐 수 있습니다.</p>
+  </div>
+
+  <h2>Java와 JavaScript의 근본적 차이</h2>
+
+  <p>이름이 비슷해서 관련 있어 보이지만, Java와 JavaScript는 완전히 다른 언어입니다.
+  시작하기 전에 가장 중요한 차이점 5가지를 먼저 짚고 갑니다.</p>
+
+  <h3>1. 타입 시스템</h3>
+
+  <div class="compare">
+    <div class="java">
+      <h4>JAVA — 정적 타입</h4>
+      <pre>String name = "홍길동";
+int age = 30;
+// age = "서른";  // 컴파일 에러!</pre>
+    </div>
+    <div class="js">
+      <h4>JAVASCRIPT — 동적 타입</h4>
+      <pre>let name = "홍길동";
+let age = 30;
+age = "서른";  // 문제 없음!</pre>
+    </div>
+  </div>
+
+  <p>JavaScript는 변수에 타입을 지정하지 않습니다. 같은 변수에 숫자를 넣었다가
+  문자열을 넣을 수도 있습니다. 자유롭지만, 실수하기도 쉽습니다.</p>
+
+  <h3>2. 클래스 vs 프로토타입</h3>
+
+  <div class="compare">
+    <div class="java">
+      <h4>JAVA — 클래스 기반</h4>
+      <pre>public class Person {
+    private String name;
+
+    public Person(String name) {
+        this.name = name;
+    }
+}</pre>
+    </div>
+    <div class="js">
+      <h4>JAVASCRIPT — 프로토타입 기반</h4>
+      <pre>function Person(name) {
+    this.name = name;
+}
+// 또는 ES6 class 문법
+class Person {
+    constructor(name) {
+        this.name = name;
+    }
+}</pre>
+    </div>
+  </div>
+
+  <p>JavaScript도 ES6부터 <code>class</code> 문법을 지원하지만, 내부적으로는 프로토타입 기반입니다.
+  5장에서 자세히 다룹니다.</p>
+
+  <h3>3. 함수는 일급 객체</h3>
+
+  <div class="compare">
+    <div class="java">
+      <h4>JAVA — 메서드는 객체가 아님</h4>
+      <pre>// Java 8+ 람다로 비슷하게 가능
+Function&lt;Integer, Integer&gt; square =
+    x -> x * x;
+
+int result = square.apply(5);</pre>
+    </div>
+    <div class="js">
+      <h4>JAVASCRIPT — 함수도 값</h4>
+      <pre>const square = function(x) {
+    return x * x;
+};
+
+// 또는 화살표 함수
+const square = x => x * x;
+
+const result = square(5);</pre>
+    </div>
+  </div>
+
+  <p>JavaScript에서 함수는 변수에 담을 수 있고, 다른 함수의 인자로 전달할 수 있으며,
+  함수에서 함수를 반환할 수도 있습니다. 이것이 JavaScript의 핵심입니다.</p>
+
+  <h3>4. 비동기 처리</h3>
+
+  <div class="compare">
+    <div class="java">
+      <h4>JAVA — 스레드 기반</h4>
+      <pre>CompletableFuture.supplyAsync(() -> {
+    return fetchData();
+}).thenAccept(data -> {
+    process(data);
+});</pre>
+    </div>
+    <div class="js">
+      <h4>JAVASCRIPT — 이벤트 루프</h4>
+      <pre>// Promise
+fetchData()
+    .then(data => process(data));
+
+// async/await
+const data = await fetchData();
+process(data);</pre>
+    </div>
+  </div>
+
+  <p>JavaScript는 단일 스레드에서 이벤트 루프를 통해 비동기를 처리합니다.
+  멀티스레딩 대신 콜백, Promise, async/await를 사용합니다. 6장에서 깊이 다룹니다.</p>
+
+  <h3>5. 실행 환경</h3>
+
+  <div class="compare">
+    <div class="java">
+      <h4>JAVA</h4>
+      <pre>// JVM 위에서 실행
+// 컴파일 필요 (javac)
+// 어디서나 같은 환경</pre>
+    </div>
+    <div class="js">
+      <h4>JAVASCRIPT</h4>
+      <pre>// 브라우저 또는 Node.js에서 실행
+// 인터프리터 방식 (JIT 컴파일)
+// 환경마다 API가 다름</pre>
+    </div>
+  </div>
+
+  <p>JavaScript는 브라우저에서 실행하면 <code>document</code>, <code>window</code> 같은 DOM API를 쓸 수 있고,
+  Node.js에서 실행하면 <code>fs</code>, <code>http</code> 같은 서버 API를 쓸 수 있습니다.</p>
+
+  <h2>학습 환경 설정</h2>
+
+  <p>JavaScript를 실행하는 두 가지 방법을 준비합니다.</p>
+
+  <h3>1. 브라우저 개발자 도구</h3>
+
+  <p>가장 빠른 방법입니다. Chrome, Firefox, Edge 등 모던 브라우저에서
+  <kbd>F12</kbd> 또는 <kbd>Cmd+Option+I</kbd>를 눌러 개발자 도구를 열고,
+  Console 탭에서 바로 JavaScript를 실행할 수 있습니다.</p>
+
+  <pre>// 브라우저 콘솔에서 실행해보세요
+console.log("Hello, JavaScript!");
+alert("환영합니다!");</pre>
+
+  <h3>2. Node.js 설치</h3>
+
+  <p>서버 사이드 JavaScript를 실행하려면 Node.js가 필요합니다.
+  <a href="https://nodejs.org">nodejs.org</a>에서 LTS 버전을 다운로드하세요.</p>
+
+  <pre>// 설치 확인
+node --version    // v18.x.x 또는 그 이상
+npm --version     // 9.x.x 또는 그 이상</pre>
+
+  <p>터미널에서 <code>node</code>를 입력하면 REPL(대화형 셸)이 시작됩니다:</p>
+
+  <pre>$ node
+> console.log("Hello from Node.js!")
+Hello from Node.js!
+> 2 + 3
+5
+> .exit</pre>
+
+  <h3>3. VS Code 설정 (권장)</h3>
+
+  <p>Visual Studio Code는 JavaScript 개발에 가장 많이 사용되는 에디터입니다.
+  다음 확장을 설치하면 편리합니다:</p>
+
+  <ul>
+    <li><strong>ESLint</strong> — 코드 품질 검사</li>
+    <li><strong>Prettier</strong> — 코드 포맷팅</li>
+    <li><strong>JavaScript (ES6) code snippets</strong> — 코드 자동완성</li>
+  </ul>
+
+  <h2>이 책의 학습 방법</h2>
+
+  <ol>
+    <li><strong>비교하며 읽기</strong>: 각 개념을 Java와 비교합니다. 익숙한 것에서 출발하세요.</li>
+    <li><strong>직접 실행하기</strong>: 예제 코드를 브라우저 콘솔이나 Node.js에서 직접 실행해보세요.</li>
+    <li><strong>변형해보기</strong>: 예제를 조금씩 바꿔보면서 동작을 확인하세요.</li>
+    <li><strong>에러 경험하기</strong>: 일부러 에러를 내보고 메시지를 읽어보세요.</li>
+  </ol>
+
+  <div class="keypoint">
+    <strong>준비 완료!</strong>
+    <p>다음 장부터 본격적으로 JavaScript를 배웁니다.
+    1장에서는 JavaScript의 역사와 특징, 그리고 첫 번째 프로그램을 작성합니다.</p>
+  </div>
+
+  <nav class="chapter-nav">
+    <a href="index.html">← 목차</a>
+    <a href="chapter1.html">1장. JavaScript 첫걸음 →</a>
+  </nav>
+</main>

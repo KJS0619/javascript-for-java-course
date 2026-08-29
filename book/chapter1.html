@@ -1,0 +1,423 @@
+<title>1장 · JavaScript 첫걸음 — 자바 개발자를 위한 JavaScript 입문</title>
+<style>
+  :root {
+    --paper: #EEF0EA;
+    --paper-raised: #FAFAF6;
+    --paper-card: #F5F6F1;
+    --ink: #201F1B;
+    --ink-soft: #5C5A4E;
+    --ink-faint: #8B8878;
+    --accent: #D4A017;
+    --accent-soft: #FDF6E3;
+    --accent-ink: #8B6914;
+    --highlight: #2E7D32;
+    --highlight-soft: #E8F5E9;
+    --line: #DEDCD0;
+    --line-strong: #C7C4B4;
+    --mono-bg: #1C2229;
+    --mono-fg: #DCE3E8;
+    --mono-dim: #7C8894;
+    --shadow: 0 1px 2px rgba(32,31,27,0.05), 0 10px 28px rgba(32,31,27,0.06);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Apple Myungjo", AppleMyungjo, Batang, "Noto Serif KR", Georgia, serif;
+    font-size: 17.5px;
+    line-height: 1.92;
+  }
+  .measure { max-width: 700px; margin: 0 auto; padding: 0 28px; }
+  h1, h2, h3 { font-weight: 700; color: var(--ink); }
+  h2 { font-size: 1.5em; margin: 2.5em 0 0.8em; padding-bottom: 0.3em; border-bottom: 1px solid var(--line); }
+  h3 { font-size: 1.2em; margin: 2em 0 0.6em; }
+  p { margin: 0 0 1.15em; }
+  a { color: var(--accent-ink); }
+  ul, ol { margin: 0 0 1.15em; padding-left: 1.5em; }
+  li { margin-bottom: 0.4em; }
+
+  .mono, code, pre { font-family: ui-monospace, "SF Mono", "JetBrains Mono", Consolas, monospace; }
+  code:not(pre code) {
+    background: var(--accent-soft);
+    color: var(--accent-ink);
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 0.86em;
+  }
+  pre {
+    background: var(--mono-bg);
+    color: var(--mono-fg);
+    padding: 20px 24px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 1.5em 0;
+  }
+  pre .comment { color: var(--mono-dim); }
+  pre .keyword { color: #C792EA; }
+  pre .string { color: #C3E88D; }
+  pre .number { color: #F78C6C; }
+
+  .masthead {
+    border-bottom: 1px solid var(--line);
+    padding: 22px 0;
+    font-family: -apple-system, "Apple SD Gothic Neo", sans-serif;
+  }
+  .masthead .row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+  .masthead .series { font-size: 12.5px; letter-spacing: 0.12em; color: var(--accent); font-weight: 600; }
+  .masthead nav a { font-size: 13px; color: var(--ink-soft); text-decoration: none; margin-left: 18px; }
+
+  .chapter-header {
+    padding: 72px 0 56px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 48px;
+  }
+  .chapter-header .num {
+    font-family: -apple-system, sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .chapter-header h1 { font-size: 2.2em; margin: 0 0 18px; }
+  .chapter-header .lead { font-size: 1.1em; color: var(--ink-soft); line-height: 1.75; }
+
+  .keypoint {
+    background: var(--accent-soft);
+    border-left: 4px solid var(--accent);
+    padding: 20px 24px;
+    margin: 1.5em 0;
+    border-radius: 0 8px 8px 0;
+  }
+  .keypoint strong {
+    display: block;
+    color: var(--accent-ink);
+    margin-bottom: 8px;
+    font-family: -apple-system, sans-serif;
+    font-size: 14px;
+  }
+
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 1.5em 0;
+  }
+  .compare h4 {
+    font-family: -apple-system, sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    margin: 0 0 8px;
+    padding: 8px 16px;
+    border-radius: 6px 6px 0 0;
+  }
+  .compare .java h4 { background: #E8EAF6; color: #3F51B5; }
+  .compare .js h4 { background: var(--accent-soft); color: var(--accent-ink); }
+  .compare pre { margin: 0; border-radius: 0 0 6px 6px; }
+  @media (max-width: 700px) { .compare { grid-template-columns: 1fr; } }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5em 0;
+    font-size: 15px;
+  }
+  th, td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--line);
+  }
+  th {
+    background: var(--paper-card);
+    font-family: -apple-system, sans-serif;
+    font-weight: 600;
+  }
+
+  .chapter-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 32px 0;
+    margin-top: 48px;
+    border-top: 1px solid var(--line);
+    font-family: -apple-system, sans-serif;
+    font-size: 14px;
+  }
+  .chapter-nav a { color: var(--accent-ink); text-decoration: none; }
+</style>
+
+<header class="masthead">
+  <div class="measure">
+    <div class="row">
+      <span class="series">자바 개발자를 위한 JAVASCRIPT 입문</span>
+      <nav>
+        <a href="index.html">목차</a>
+        <a href="chapter0.html">← 이전</a>
+        <a href="chapter2.html">다음 →</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main class="measure">
+  <div class="chapter-header">
+    <div class="num">CHAPTER 1</div>
+    <h1>JavaScript 첫걸음</h1>
+    <p class="lead">JavaScript의 역사와 특징을 이해하고, Java와의 근본적인 차이를 파악합니다.
+    그리고 첫 번째 프로그램을 작성합니다.</p>
+  </div>
+
+  <h2>JavaScript의 탄생</h2>
+
+  <p>1995년, Netscape의 브렌던 아이크(Brendan Eich)가 단 10일 만에 만든 언어입니다.
+  당시 이름은 Mocha였다가 LiveScript로, 그리고 마케팅 목적으로 JavaScript가 되었습니다.</p>
+
+  <div class="keypoint">
+    <strong>이름의 함정</strong>
+    <p>JavaScript와 Java는 이름만 비슷할 뿐, 완전히 다른 언어입니다.
+    "Java"를 붙인 건 당시 Java의 인기를 이용하려는 마케팅 전략이었습니다.</p>
+  </div>
+
+  <p>처음에는 브라우저에서 간단한 폼 검증용으로 만들어졌지만,
+  지금은 프론트엔드, 백엔드, 모바일, 데스크톱 앱까지 모든 곳에서 사용됩니다.</p>
+
+  <h2>JavaScript의 발전</h2>
+
+  <table>
+    <tr>
+      <th>연도</th>
+      <th>버전</th>
+      <th>주요 기능</th>
+    </tr>
+    <tr>
+      <td>1997</td>
+      <td>ES1</td>
+      <td>첫 표준화 (ECMAScript)</td>
+    </tr>
+    <tr>
+      <td>2009</td>
+      <td>ES5</td>
+      <td>strict mode, JSON, Array 메서드</td>
+    </tr>
+    <tr>
+      <td>2015</td>
+      <td>ES6 (ES2015)</td>
+      <td>let/const, 화살표 함수, 클래스, Promise, 모듈</td>
+    </tr>
+    <tr>
+      <td>2016~</td>
+      <td>ES2016+</td>
+      <td>async/await, 옵셔널 체이닝 등 매년 업데이트</td>
+    </tr>
+  </table>
+
+  <p>ES6(2015)가 가장 큰 변화였습니다. 현대 JavaScript는 대부분 ES6 이후 문법을 사용합니다.
+  이 책도 ES6+ 문법을 기준으로 설명합니다.</p>
+
+  <h2>Java와 JavaScript 비교</h2>
+
+  <table>
+    <tr>
+      <th>구분</th>
+      <th>Java</th>
+      <th>JavaScript</th>
+    </tr>
+    <tr>
+      <td>타입</td>
+      <td>정적 타입 (컴파일 시 검사)</td>
+      <td>동적 타입 (런타임에 결정)</td>
+    </tr>
+    <tr>
+      <td>실행</td>
+      <td>JVM (컴파일 필요)</td>
+      <td>브라우저/Node.js (인터프리터)</td>
+    </tr>
+    <tr>
+      <td>객체</td>
+      <td>클래스 기반</td>
+      <td>프로토타입 기반</td>
+    </tr>
+    <tr>
+      <td>함수</td>
+      <td>메서드 (클래스에 종속)</td>
+      <td>일급 객체 (독립적)</td>
+    </tr>
+    <tr>
+      <td>스레드</td>
+      <td>멀티스레드</td>
+      <td>싱글스레드 + 이벤트 루프</td>
+    </tr>
+    <tr>
+      <td>세미콜론</td>
+      <td>필수</td>
+      <td>선택 (ASI)</td>
+    </tr>
+  </table>
+
+  <h2>Hello, JavaScript!</h2>
+
+  <p>이제 첫 번째 프로그램을 작성해봅시다.</p>
+
+  <h3>방법 1: 브라우저 콘솔</h3>
+
+  <p>브라우저에서 <kbd>F12</kbd>를 눌러 개발자 도구를 열고, Console 탭에 입력하세요:</p>
+
+  <pre>console.log("Hello, JavaScript!");
+
+// 변수 선언
+let name = "Java 개발자";
+console.log("안녕하세요, " + name + "님!");
+
+// 템플릿 리터럴 (ES6)
+console.log(`안녕하세요, ${name}님!`);</pre>
+
+  <h3>방법 2: HTML 파일</h3>
+
+  <p><code>hello.html</code> 파일을 만들어보세요:</p>
+
+  <pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Hello JavaScript&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1 id="greeting"&gt;&lt;/h1&gt;
+
+    &lt;script&gt;
+        const name = "Java 개발자";
+        document.getElementById("greeting").textContent =
+            `안녕하세요, ${name}님!`;
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+
+  <h3>방법 3: Node.js</h3>
+
+  <p><code>hello.js</code> 파일을 만들고 터미널에서 실행하세요:</p>
+
+  <pre>// hello.js
+const name = "Java 개발자";
+console.log(`안녕하세요, ${name}님!`);
+
+// 실행: node hello.js</pre>
+
+  <h2>Java vs JavaScript 문법 비교</h2>
+
+  <h3>변수 선언</h3>
+
+  <div class="compare">
+    <div class="java">
+      <h4>JAVA</h4>
+      <pre>String message = "Hello";
+final int MAX = 100;
+int count = 0;</pre>
+    </div>
+    <div class="js">
+      <h4>JAVASCRIPT</h4>
+      <pre>let message = "Hello";
+const MAX = 100;
+var count = 0;  // 옛날 방식</pre>
+    </div>
+  </div>
+
+  <p>JavaScript에서는 <code>let</code>(변경 가능), <code>const</code>(상수),
+  <code>var</code>(구버전)를 사용합니다. 타입은 명시하지 않습니다.</p>
+
+  <h3>출력</h3>
+
+  <div class="compare">
+    <div class="java">
+      <h4>JAVA</h4>
+      <pre>System.out.println("Hello");
+System.out.printf("Count: %d", 10);</pre>
+    </div>
+    <div class="js">
+      <h4>JAVASCRIPT</h4>
+      <pre>console.log("Hello");
+console.log("Count:", 10);
+console.log(`Count: ${10}`);</pre>
+    </div>
+  </div>
+
+  <h3>문자열 연결</h3>
+
+  <div class="compare">
+    <div class="java">
+      <h4>JAVA</h4>
+      <pre>String name = "홍길동";
+String msg = "안녕, " + name + "!";
+
+// Java 15+ 텍스트 블록
+String html = """
+    &lt;html&gt;
+        &lt;body&gt;%s&lt;/body&gt;
+    &lt;/html&gt;
+    """.formatted(name);</pre>
+    </div>
+    <div class="js">
+      <h4>JAVASCRIPT</h4>
+      <pre>const name = "홍길동";
+const msg = `안녕, ${name}!`;
+
+// 템플릿 리터럴 (백틱)
+const html = `
+    &lt;html&gt;
+        &lt;body&gt;${name}&lt;/body&gt;
+    &lt;/html&gt;
+`;</pre>
+    </div>
+  </div>
+
+  <div class="keypoint">
+    <strong>템플릿 리터럴</strong>
+    <p>JavaScript의 백틱(<code>`</code>)은 Java의 텍스트 블록과 비슷하지만,
+    <code>${}</code> 안에 어떤 표현식이든 넣을 수 있어 더 강력합니다.</p>
+  </div>
+
+  <h2>세미콜론은 필수인가?</h2>
+
+  <p>JavaScript는 세미콜론을 생략할 수 있습니다.
+  엔진이 자동으로 삽입해주기 때문입니다(Automatic Semicolon Insertion, ASI).</p>
+
+  <pre>// 둘 다 유효
+let a = 1;
+let b = 2
+
+console.log(a + b)</pre>
+
+  <p>하지만 가끔 예상치 못한 동작이 발생할 수 있어,
+  많은 팀에서는 세미콜론을 명시적으로 작성하는 규칙을 사용합니다.
+  ESLint와 Prettier로 일관성을 유지하는 것이 좋습니다.</p>
+
+  <h2>strict mode</h2>
+
+  <p>ES5에서 도입된 엄격 모드입니다. 파일 맨 위에 다음을 추가하면 활성화됩니다:</p>
+
+  <pre>"use strict";
+
+// 이제 선언 없이 변수 사용 불가
+x = 10;  // ReferenceError!
+
+// 반드시 선언 필요
+let x = 10;  // OK</pre>
+
+  <p>ES6 모듈(<code>import</code>/<code>export</code>)을 사용하면 자동으로 strict mode가 적용됩니다.
+  Java 개발자에게 익숙한 엄격한 환경을 원한다면 strict mode를 사용하세요.</p>
+
+  <h2>정리</h2>
+
+  <ul>
+    <li>JavaScript는 Java와 이름만 비슷한 완전히 다른 언어</li>
+    <li>동적 타입, 프로토타입 기반, 함수가 일급 객체</li>
+    <li>ES6(2015)가 현대 JavaScript의 기준</li>
+    <li>브라우저 콘솔, HTML 파일, Node.js에서 실행 가능</li>
+    <li><code>let</code>/<code>const</code> 사용, 템플릿 리터럴(<code>`${}`</code>) 활용</li>
+  </ul>
+
+  <nav class="chapter-nav">
+    <a href="chapter0.html">← 0장. 오리엔테이션</a>
+    <a href="chapter2.html">2장. 변수와 타입 →</a>
+  </nav>
+</main>
